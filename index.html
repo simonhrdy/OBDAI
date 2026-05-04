@@ -295,9 +295,8 @@ function renderQ(){
   const fb=document.getElementById('fbBanner');
   fb.className='feedback';fb.textContent='';
   document.getElementById('submitBtn').disabled=true;
-  document.getElementById('submitBtn').style.display=studyMode?'none':'';
+  document.getElementById('submitBtn').style.display='';
   document.getElementById('nextBtn').classList.add('hidden');
-  if(studyMode)submit();
 }
 
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -308,7 +307,6 @@ function pick(div,type){
   if(type==='single'){wrap.querySelectorAll('.option').forEach(o=>o.classList.remove('sel'));}
   div.classList.toggle('sel');
   document.getElementById('submitBtn').disabled=wrap.querySelectorAll('.sel').length===0;
-  if(studyMode)submit();
 }
 
 function submit(){
