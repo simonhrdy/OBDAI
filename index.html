@@ -14,7 +14,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#080d17;color:#dce6f
 .logo{font-size:2.4rem;font-weight:700;color:#00c8ff;margin-bottom:6px;letter-spacing:-1px}
 .logo span{color:#fff}
 .subtitle{color:#5a7090;margin-bottom:32px;font-size:.95rem}
-.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:8px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:8px}
 .menu-card{background:#0f1825;border:1px solid #1a2d45;border-radius:14px;padding:36px 24px;cursor:pointer;transition:border-color .2s,background .2s;text-align:center}
 .menu-card:hover{border-color:#00c8ff;background:#0b1420}
 .menu-icon{font-size:2.8rem;margin-bottom:12px}
@@ -121,6 +121,29 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#080d17;color:#dce6f
         <div class="menu-title">PRI Quiz</div>
         <div class="menu-desc">Podnikové a Řídící Informační systémy<br><span style="color:#00c853;font-size:.8rem">116 karet</span></div>
       </div>
+      <div class="menu-card" onclick="showPravo()">
+        <div class="menu-icon">&#9878;</div>
+        <div class="menu-title">Právo Quiz</div>
+        <div class="menu-desc">Právo v ICT<br><span style="color:#ffc800;font-size:.8rem">35 otázek</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÁVO START -->
+  <div class="start" id="pravoStartScreen">
+    <div class="logo">&#9878; Právo<span>Quiz</span></div>
+    <p class="subtitle">Právo v ICT — Otestuj své znalosti</p>
+    <div class="card">
+      <div class="info-grid">
+        <div class="info-card"><div class="info-val">35</div><div class="info-label">Otázek v bance</div></div>
+        <div class="info-card"><div class="info-val">20</div><div class="info-label">Otázek v testu</div></div>
+        <div class="info-card"><div class="info-val">70%</div><div class="info-label">Hranice úspěchu</div></div>
+      </div>
+      <div style="text-align:center;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-blue" onclick="startPravoQuiz(false)">Spustit test &#8594;</button>
+        <button class="btn btn-green" onclick="startPravoQuiz(true)">&#128214; Studijní mód (vše)</button>
+        <button class="btn btn-ghost" onclick="goHome()">&#8592; Menu</button>
+      </div>
     </div>
   </div>
 
@@ -184,7 +207,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#080d17;color:#dce6f
         <h2 id="verdict"></h2>
         <p id="verdictSub"></p>
       </div>
-      <div class="res-actions">
+      <div class="res-actions" id="resActions">
         <button class="btn btn-blue" onclick="startQuiz(false)">Nový test (50 náhodných)</button>
         <button class="btn btn-green" onclick="startQuiz(true)">&#128214; Studijní mód (vše)</button>
         <button class="btn btn-red" onclick="startExam()">&#128221; Zkouška (23 otázek)</button>
@@ -264,9 +287,11 @@ function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.fl
 
 document.getElementById('bankSize').textContent = QUESTIONS.length;
 
+let currentSubject='cybersec';
+
 // ── SCREEN MANAGEMENT ──
 function hideAll(){
-  ['mainMenu','startScreen','quizScreen','resultsScreen','priScreen'].forEach(id=>{
+  ['mainMenu','startScreen','quizScreen','resultsScreen','priScreen','pravoStartScreen'].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.style.display='none';
   });
@@ -278,6 +303,7 @@ function goHome(){
 }
 
 function showCyberSec(){
+  currentSubject='cybersec';
   hideAll();
   document.getElementById('startScreen').style.display='block';
 }
@@ -285,6 +311,22 @@ function showCyberSec(){
 function showPRI(){
   hideAll();
   startPRIQuiz();
+}
+
+function showPravo(){
+  currentSubject='pravo';
+  hideAll();
+  document.getElementById('pravoStartScreen').style.display='block';
+}
+
+function startPravoQuiz(study){
+  currentSubject='pravo';
+  studyMode=!!study;examMode=false;
+  pool=study?shuffle(PRAVO_QUESTIONS):shuffle(PRAVO_QUESTIONS).slice(0,20);
+  idx=0;score=0;wrong=0;
+  hideAll();
+  document.getElementById('quizScreen').style.display='block';
+  renderQ();
 }
 
 // ── CYBERSEC QUIZ ──
@@ -424,6 +466,17 @@ function showResults(){
   }
   document.getElementById('verdict').textContent=v;
   document.getElementById('verdictSub').textContent=sub;
+  const ra=document.getElementById('resActions');
+  if(currentSubject==='pravo'){
+    ra.innerHTML='<button class="btn btn-blue" onclick="startPravoQuiz(false)">Nový test (20 náhodných)</button>'
+      +'<button class="btn btn-green" onclick="startPravoQuiz(true)">&#128214; Studijní mód (vše)</button>'
+      +'<button class="btn btn-ghost" onclick="goHome()">&#8592; Menu</button>';
+  } else {
+    ra.innerHTML='<button class="btn btn-blue" onclick="startQuiz(false)">Nový test (50 náhodných)</button>'
+      +'<button class="btn btn-green" onclick="startQuiz(true)">&#128214; Studijní mód (vše)</button>'
+      +'<button class="btn btn-red" onclick="startExam()">&#128221; Zkouška (23 otázek)</button>'
+      +'<button class="btn btn-ghost" onclick="goHome()">&#8592; Menu</button>';
+  }
 }
 
 // ── PRI FLASHCARD ──
@@ -474,6 +527,45 @@ function priPrev(){
     priRenderCard();
   }
 }
+
+// ── PRÁVO DATA ──
+const PRAVO_QUESTIONS = [
+  {id:1,question:"Listovní tajemství je",type:"single",options:[{id:"a",text:"právo vyplývající z mezinárodních smluv o lidských právech, které je v ČR chráněno jen na úrovni obyčejného zákona"},{id:"b",text:"morální právo bez právního zakotvení"},{id:"c",text:"etický standard novinářské profese"},{id:"d",text:"právo chráněné Listinou základních práv a svobod"}],correct:["d"]},
+  {id:2,question:"Autorem díla dle autorského zákona může být",type:"single",options:[{id:"a",text:"výhradně fyzická osoba, která dílo vytvořila"},{id:"b",text:"fyzická osoba, která dílo vytvořila nebo právnická osoba, která si dílo objednala"},{id:"c",text:"osoba, která se nejvíce zasloužila o vznik díla"},{id:"d",text:"investor"}],correct:["a"]},
+  {id:3,question:"Osobní údaje, které byly zveřejněny ve státem vedeném veřejném rejstříku, lze užívat:",type:"single",options:[{id:"a",text:"výhradně se souhlasem správního orgánu odpovědného za vedení daného rejstříku"},{id:"b",text:"výhradně se souhlasem fyzické osoby, které se osobní údaje týkají"},{id:"c",text:"bez dalších omezení"},{id:"d",text:"existuje-li pro to jakýkoli právní základ dle GDPR"}],correct:["d"]},
+  {id:4,question:"Subjektivní odpovědnost znamená",type:"single",options:[{id:"a",text:"odpovědnost subjektu za své vlastní protiprávní jednání"},{id:"b",text:"odpovědnost za zaviněné porušení právní povinnosti"},{id:"c",text:"odpovědnost za újmu tak, jak ji vnímá poškozený (např. v případě škody na věci zvláštní obliby)"},{id:"d",text:"vnitřní pocit zodpovědnosti jednotlivce za své vlastní protiprávní jednání"}],correct:["a"]},
+  {id:5,question:"Smluvní pokuta je",type:"single",options:[{id:"a",text:"dohoda pachatele trestného činu a státního zástupce nahrazující trest odnětí svobody peněžitou sankcí"},{id:"b",text:"zvláštní formou nároku odpovědnosti za škodu"},{id:"c",text:"pokuta udělená v blokovém řízení"},{id:"d",text:"způsobem zajištění závazku"}],correct:["d"]},
+  {id:6,question:"Všeobecné obchodní podmínky:",type:"single",options:[{id:"a",text:"jsou nedílnou součástí smlouvy, jsou-li podepsány oběma stranami"},{id:"b",text:"jsou nedílnou součástí smlouvy, jsou-li ke smlouvě připojeny nebo stranám známy"},{id:"c",text:"představují obecnou právní úpravu, která může být nahrazena dohodou stran"},{id:"d",text:"mohou být poskytovatelem kdykoli jednostranně změněny"}],correct:["b"]},
+  {id:7,question:"Průmyslový vzor chrání",type:"single",options:[{id:"a",text:"technické řešení, které je výsledkem vynálezecké činnosti"},{id:"b",text:"zlepšovací návrhy a drobné technické inovace"},{id:"c",text:"vzhled výrobku"},{id:"d",text:"logo společnosti"}],correct:["c"]},
+  {id:8,question:"Zužitkování databáze znamená",type:"single",options:[{id:"a",text:"Vytěžení databáze"},{id:"b",text:"Využití databáze v rámci podnikatelské činnosti"},{id:"c",text:"Zpřístupnění databáze či její podstatné části veřejnosti"},{id:"d",text:"Užití původní databáze k vytvoření databáze nové"}],correct:["a"]},
+  {id:9,question:"Užití osobních údajů zákazníka pro účely nabídky vlastního zboží je z hlediska GDPR",type:"single",options:[{id:"a",text:"jako přímý marketing dovoleno na základě tzv. oprávněného zájmu správce"},{id:"b",text:"podmíněno souhlasem subjektu údajů"},{id:"c",text:"zakázáno"},{id:"d",text:"právně neupraveno"}],correct:["a"]},
+  {id:10,question:"Trestní odpovědnost",type:"single",options:[{id:"a",text:"je založena na principu subjektivní odpovědnosti"},{id:"b",text:"je podmíněna úmyslným zaviněním"},{id:"c",text:"může být vyvozena výhradně vůči fyzickým osobám, které jsou pachateli trestného činu"},{id:"d",text:"primárně směřuje k nahrazení škody poškozenému"}],correct:["a"]},
+  {id:11,question:"Co je obsahem práva na informační sebeurčení?",type:"single",options:[{id:"a",text:"právo státu zajišťovat vlastní informační bezpečnost"},{id:"b",text:"právo jednotlivce rozhodovat o tom, které údaje o své osobě učiní dostupnými a komu"},{id:"c",text:"obchodní tajemství podnikatele"},{id:"d",text:"právo vyplývající z uzavřené dohody o mlčenlivosti"}],correct:["b"]},
+  {id:12,question:"Trestným činem není",type:"single",options:[{id:"a",text:"Zločin"},{id:"b",text:"Přečin"},{id:"c",text:"Přestupek"},{id:"d",text:"Zvlášť závažný zločin"}],correct:["c"]},
+  {id:13,question:"Konkurenční doložka",type:"single",options:[{id:"a",text:"může být sjednána jakoukoli formou"},{id:"b",text:"může být zaměstnavatelem kdykoli písemně vypovězena"},{id:"c",text:"musí obsahovat ujednání o finanční kompenzaci pro zaměstnance"},{id:"d",text:"omezuje zaměstnance po dobu trvání pracovního poměru"}],correct:["c"]},
+  {id:14,question:"Mezi práva k průmyslovému vlastnictví nepatří",type:"single",options:[{id:"a",text:"Právo pořizovatele databáze"},{id:"b",text:"Obchodní tajemství"},{id:"c",text:"Průmyslový vzor"},{id:"d",text:"Ochranná známka"}],correct:["a"]},
+  {id:15,question:"Předmětem smlouvy o poskytování software jako služby (SaaS) je",type:"single",options:[{id:"a",text:"závazek poskytovatele vytvořit software na objednávku (na klíč) dle individuálních požadavků objednatele"},{id:"b",text:"závazek poskytovatele instalovat SW na zařízení objednatele a zajistit služby servisní a technické podpory"},{id:"c",text:"závazek poskytovatele převzít do správy stávající SW objednatele"},{id:"d",text:"závazek poskytovatele umožnit objednateli SW provozovaný na zařízení poskytovatele"}],correct:["d"]},
+  {id:16,question:"Principem priority se v právu průmyslového vlastnictví rozumí",type:"single",options:[{id:"a",text:"Přednost vlastníka zapsaného průmyslového vlastnictví před právem k nezapsanému průmyslovému vlastnictví"},{id:"b",text:"Právo původce vynálezu na patent"},{id:"c",text:"Přednost osoby, která své právo uplatnila jako první"},{id:"d",text:"Přednostní právo strategických podniků na zajištění průmyslověprávní ochrany"}],correct:["c"]},
+  {id:17,question:"Správce osobních údajů:",type:"single",options:[{id:"a",text:"určuje jak a prostředky zpracovatel osobních údajů"},{id:"b",text:"je vždy povinen zpracovávat osobní údaje výhradně se předchozím povolením ÚOOÚ"},{id:"c",text:"může zpracovávat osobní údaje výhradně se souhlasem subjektu údajů"},{id:"d",text:"může mít povinnost určit osobu tzv. pověřence a to v případě splnění podmínek"}],correct:["d"]},
+  {id:18,question:"Poskytovatelé služeb informační společnosti:",type:"single",options:[{id:"a",text:"odpovídají v plném rozsahu jako společnosti typu hosting"},{id:"b",text:"odpovídají za uživatelský obsah výhradně na základě předchozího povolení ÚOOÚ"},{id:"c",text:"odpovídají za uživatelský obsah výhradně na základě předchozího souhlasu subjektů"},{id:"d",text:"za uživatelský obsah zpravidla neodpovídají, jelikož jde o přenosový obsah"}],correct:["d"]},
+  {id:19,question:"Počítačový program:",type:"single",options:[{id:"a",text:"je chráněn na základě softwarového patentu"},{id:"b",text:"je chráněn autorským právem, je-li to jedinečný výsledek tvůrčí duševní činnosti autora"},{id:"c",text:"je chráněn jako autorské dílo, jedná-li se o jedinečný výsledek tvůrčí duševní činnosti autora, dokud autor dokáže užít zdrojový kód"},{id:"d",text:"je chráněn jako obchodní tajemství, pokud autor dokáže užít zdrojový kód"}],correct:["b"]},
+  {id:20,question:"Data veřejného sektoru:",type:"single",options:[{id:"a",text:"jsou výhradně vlastnictvím podnikatelů"},{id:"b",text:"jsou dostupná jedině státu"},{id:"c",text:"jsou obchodována komerčně, ledaže jsou zpřístupněna pro nekomerční užití"},{id:"d",text:"mají být zpřístupněna opětovnému užití ve strojově čitelné podobě"}],correct:["d"]},
+  {id:21,question:"Zvláštní právo pořizovatele databáze",type:"single",options:[{id:"a",text:"chrání jakékoli databáze, pokud s pořízením, ověřením nebo předvedením jejich obsahu je spojen podstatný vklad"},{id:"b",text:"chrání databáze, jejíž obsah je výsledkem vedení v elektronické formě struktury databáze"},{id:"c",text:"chrání jakákoli data uspořádaná do strukturované databáze vedené v elektronické formě"},{id:"d",text:"chrání databáze, jejíž obsah je výsledkem tvůrčí duševní činnosti jejího autora"}],correct:["b"]},
+  {id:22,question:"Uzavřít smlouvu s využitím prostředků elektronické komunikace:",type:"single",options:[{id:"a",text:"musí být opatřena zaručeným elektronickým podpisem obou stran"},{id:"b",text:"smlouva je uzavřena v okamžiku, kdy je navrhovateli doručen projev vůle, jehož obsahem je akceptace návrhu"},{id:"c",text:"musí být podepsána s využitím prostředků biometrické identifikace"},{id:"d",text:"musí být náležitě uzavřena"}],correct:["b"]},
+  {id:23,question:"Digitální obsah pro vlastní potřebu uživatele je poskytován na základě:",type:"single",options:[{id:"a",text:"kupní smlouvy"},{id:"b",text:"licenční smlouvy"},{id:"c",text:"nájemní smlouvy"},{id:"d",text:"smlouvy o poskytování digitálního obsahu"}],correct:["b"]},
+  {id:24,question:"Obsahem principu priority v oblasti průmyslového vlastnictví je",type:"single",options:[{id:"a",text:"povinnost registrovat statky průmyslového vlastnictví"},{id:"b",text:"vznik práv tomu, kdo podal přihlášku jako první"},{id:"c",text:"územní omezení účinků registrace v příslušném úřadu"},{id:"d",text:"přednost zapsaného označení průmyslového vlastnictví"}],correct:["b"]},
+  {id:25,question:"Autorem počítačového programu je",type:"single",options:[{id:"a",text:"fyzická osoba, která dílo vytvořila"},{id:"b",text:"investor, jde-li o dílo vytvořené na objednávku"},{id:"c",text:"osoba, která vytvořila základní principy fungování počítačového programu"},{id:"d",text:"provozovatel jazykového modelu, jde-li o počítačový program vytvořený s využitím AI"}],correct:["a"]},
+  {id:26,question:"Obchodní tajemství představují",type:"single",options:[{id:"a",text:"veškeré informace, které podnikatel prohlásí za důvěrné"},{id:"b",text:"důvěrné informace, jejichž zpřístupnění třetí osobě zakáže podnikatel dohodou o mlčenlivosti"},{id:"c",text:"konkurenčně významné, určitelné, ocenitelné a v příslušných obchodních kruzích nedostupné skutečnosti, které souvisejí se závodem a jejichž vlastník zajišťuje jejich utajení"},{id:"d",text:"postupy zaregistrované u Úřadu průmyslového vlastnictví"}],correct:["c"]},
+  {id:27,question:"Smlouvu o vývoji SW je možno uzavřít",type:"single",options:[{id:"a",text:"v jakékoli formě"},{id:"b",text:"ústně, písemně i elektronickými prostředky"},{id:"c",text:"písemně či s využitím prostředků elektronické komunikace"},{id:"d",text:"jedině písemnou formou"}],correct:["d"]},
+  {id:28,question:"Trestný čin porušení tajemství dopravovaných zpráv lze spáchat",type:"single",options:[{id:"a",text:"úmyslně"},{id:"b",text:"úmyslně nebo z nedbalosti"},{id:"c",text:"bez ohledu na zavinění"},{id:"d",text:"výhradně z nedbalosti"}],correct:["b"]},
+  {id:29,question:"Zvláštním právem pořizovatele databáze je chráněna:",type:"single",options:[{id:"a",text:"Každá databáze, která vznikla systematickým uspořádáním jejich prvků, které jsou individuálně přístupné"},{id:"b",text:"Databáze, jejíž jednotlivé prvky jsou unikátní"},{id:"c",text:"Databáze, která je jedinečným výsledkem tvůrčí duševní činnosti pořizovatele"},{id:"d",text:"Databáze, jejíž pořizovatel vynaložil podstatný vklad do shromáždění, ověření nebo předvedení databáze"}],correct:["d"]},
+  {id:30,question:"Principy fungování počítačového programu mohou být v ČR chráněny",type:"single",options:[{id:"a",text:"autorským právem"},{id:"b",text:"softwarovým patentem"},{id:"c",text:"průmyslovým vzorem"},{id:"d",text:"žádným z těchto způsobů"}],correct:["a"]},
+  {id:31,question:"Užitný vzor chrání",type:"single",options:[{id:"a",text:"Technické řešení, které je nové a překračuje rámec pouhé odborné dovednosti"},{id:"b",text:"Vzhled výrobku"},{id:"c",text:"Prototyp výrobku, který ještě nebyl uveden na trh"},{id:"d",text:"Výrobní postup, jehož utajení výrobce zajišťuje prostřednictvím smluv o zachování mlčenlivosti"}],correct:["a"]},
+  {id:32,question:"Odpovědnost za škodu za porušení smluvní povinnosti",type:"single",options:[{id:"a",text:"je založena na principu objektivní odpovědnosti"},{id:"b",text:"je ústavní zásadou trestního práva"},{id:"c",text:"vzniká v případě zaviněného porušení smluvní povinnosti"},{id:"d",text:"musí být výslovně sjednána ve smlouvě, jinak se neuplatní"}],correct:["c"]},
+  {id:33,question:"Obžalobu v trestním řízení podává",type:"single",options:[{id:"a",text:"policejní orgán"},{id:"b",text:"poškozený"},{id:"c",text:"státní zástupce"},{id:"d",text:"státní zástupce nebo poškozený"}],correct:["d"]},
+  {id:34,question:"Mezi práva subjektu údajů nepatří",type:"single",options:[{id:"a",text:"právo být zapomenut"},{id:"b",text:"právo zakázat zpracování osobních údajů"},{id:"c",text:"právo na přístup k údajům"},{id:"d",text:"právo vznést námitku"}],correct:["b"]},
+  {id:35,question:"Vlastník slovní ochranné známky",type:"single",options:[{id:"a",text:"má přednostní právo k doménovému jménu, které je shodné s touto ochrannou známkou"},{id:"b",text:"má právo zakázat užívání doménového jména shodného s ochrannou známkou, pokud je ochranná známka starší než registrace doménového jména, a to bez ohledu na obsah webových stránek"},{id:"c",text:"má právo zakázat užívání doménového jména shodného s ochrannou známkou, pokud je ochranná známka starší než registrace doménového jména a doména je užívána k prezentaci podobných výrobků"},{id:"d",text:"nemá žádná práva vůči doménovému jménu, dokud není ochranná známka zapsána"}],correct:["b"]}
+];
 </script>
 </body>
 </html>
