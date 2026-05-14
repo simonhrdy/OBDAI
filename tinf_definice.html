@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TINF – Definice ke zkoušce</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-hover: #273449;
+    --bg-open: #233148;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --accent: #60a5fa;
+    --accent-2: #34d399;
+    --accent-3: #fbbf24;
+    --border: #334155;
+    --code-bg: #0b1220;
+    --shadow: 0 6px 24px rgba(0,0,0,.35);
+  }
+  body.light {
+    --bg: #f5f7fb;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-open: #eef2ff;
+    --text: #1e293b;
+    --text-dim: #64748b;
+    --accent: #2563eb;
+    --accent-2: #059669;
+    --accent-3: #b45309;
+    --border: #e2e8f0;
+    --code-bg: #f1f5f9;
+    --shadow: 0 4px 14px rgba(15,23,42,.08);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 18px 16px 80px;
+  }
+  header.hero {
+    padding: 22px 18px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(96,165,250,.18), rgba(52,211,153,.10));
+    border: 1px solid var(--border);
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  header.hero h1 {
+    margin: 0 0 6px;
+    font-size: clamp(20px, 4.5vw, 28px);
+    letter-spacing: .2px;
+  }
+  header.hero p {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 10px;
+    align-items: center;
+  }
+  .search {
+    flex: 1 1 220px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    padding: 12px 38px 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .search input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(96,165,250,.15);
+  }
+  .search .clear {
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  .search .clear:hover { color: var(--text); background: var(--bg-card-hover); }
+
+  .controls {
+    display: flex;
+    gap: 6px;
+  }
+  button.icon-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .15s, transform .05s;
+  }
+  button.icon-btn:hover { background: var(--bg-card-hover); }
+  button.icon-btn:active { transform: scale(.97); }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .chip {
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .chip:hover { color: var(--text); }
+  .chip.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .category {
+    margin-top: 22px;
+  }
+  .category h2 {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+    margin: 0 0 10px;
+    padding-left: 4px;
+  }
+
+  details.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: background .15s;
+  }
+  details.card:hover { background: var(--bg-card-hover); }
+  details.card[open] {
+    background: var(--bg-open);
+    box-shadow: var(--shadow);
+  }
+  details.card summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  details.card summary::-webkit-details-marker { display: none; }
+  details.card summary .arrow {
+    color: var(--text-dim);
+    transition: transform .2s;
+    font-size: 14px;
+    margin-left: auto;
+  }
+  details.card[open] summary .arrow { transform: rotate(90deg); }
+  details.card summary .badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(96,165,250,.15);
+    color: var(--accent);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  details.card .body {
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    padding-top: 12px;
+  }
+  .body h4 {
+    margin: 12px 0 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+  .body h4:first-child { margin-top: 0; }
+  .formula {
+    font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+    background: var(--code-bg);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .definition {
+    background: var(--code-bg);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14.5px;
+  }
+  .explanation {
+    color: var(--text);
+    font-size: 15px;
+  }
+  .explanation ul { padding-left: 20px; margin: 6px 0; }
+  .explanation li { margin: 3px 0; }
+  .example {
+    background: rgba(52,211,153,.08);
+    border-left: 3px solid var(--accent-2);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14.5px;
+  }
+  .tip {
+    background: rgba(251,191,36,.08);
+    border-left: 3px solid var(--accent-3);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  code, .mono {
+    font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-size: .92em;
+  }
+  .empty {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 40px 20px;
+  }
+  .stats {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin: 6px 4px 14px;
+  }
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    details.card summary { font-size: 15px; padding: 12px 14px; }
+    .formula, .definition { font-size: 13.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="hero">
+    <h1>TINF — definice ke zkoušce</h1>
+    <p>Proces překladu • formální jazyky • gramatiky • konečné automaty • NDKA • zásobníkové automaty • regulární výrazy • pumping lemma • složitost (O/Ω/Θ, P, NP, NP-úplnost) • vyčíslitelnost (Turingův stroj, Halting problem) • jak počítat. Klikni na pojem pro rozbalení.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="search">
+      <input id="searchBox" type="search" placeholder="Hledej pojem (např. 'gramatika', 'NDKA', 'pumping')..." autocomplete="off">
+      <button class="clear" id="clearBtn" title="Vymazat" aria-label="Vymazat">×</button>
+    </div>
+    <div class="controls">
+      <button class="icon-btn" id="expandAll" title="Rozbalit vše">⤢</button>
+      <button class="icon-btn" id="collapseAll" title="Sbalit vše">⤡</button>
+      <button class="icon-btn" id="themeBtn" title="Přepnout motiv">☾</button>
+    </div>
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div class="stats" id="stats"></div>
+
+  <main id="content"></main>
+
+  <footer>
+    Obsahuje: proces překladu, formální jazyky, gramatiky, KA/NDKA, regulární výrazy, zásobníkové automaty,<br>
+    pumping lemma, složitost (O/Ω/Θ, P, NP, NP-úplnost, heuristiky), vyčíslitelnost (TS, Halting problem, Church-Turing) + jak počítat.<br>
+    Pro nejlepší zážitek otevři v Chrome / Safari. Funguje offline – stačí soubor uložit a otevřít.
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  // ============================================================
+  // KATEGORIE: PROCES PŘEKLADU
+  // ============================================================
+  {
+    cat: "Proces překladu",
+    term: "Proces překladu (4 části)",
+    formula: "1) Lexikální analýza\n2) Syntaktická analýza\n3) Zpracování sémantiky (sémantická analýza)\n4) Generování cílového kódu",
+    def: "Proces překladu programu lze rozdělit na čtyři části: lexikální analýzu, syntaktickou analýzu, zpracování sémantiky (sémantická analýza) a generování cílového kódu.",
+    exp: "Program musí být vytvořen podle pravidel daného jazyka. Analýza postupně ověřuje platnost těchto pravidel. <b>Rozdělení na části i jejich pořadí má svůj význam:</b><ul><li>Lexikální analýza je jednodušší → lze ji realizovat účinnějšími prostředky (konečným automatem).</li><li>Syntaktická analýza je složitější → vyžaduje silnější aparát (zásobníkový automat).</li></ul>Využitím gramatik a automatů lze analyzátory generovat <b>automaticky</b> z popisu jazyka.",
+    ex: ""
+  },
+  {
+    cat: "Proces překladu",
+    term: "Lexikální analýza",
+    formula: "znaky → vyšší jednotky (tokeny)\n(číslo, identifikátor, příkaz, ...)",
+    def: "Lexikální analýza kontroluje jednotlivé znaky programu a ze znaků vytváří vyšší jednotky (číslo, identifikátor, příkaz). Každé slovo jazyka musí být vytvořeno v souladu s gramatikou daného jazyka. Kontroluje se přípustnost znaků i struktura slova.",
+    exp: "Lex. analyzátor lze realizovat <b>konečným automatem</b> (popř. regulárním výrazem / regulární gramatikou) – proto stačí jednoduché prostředky.",
+    ex: "počet faktur ✗  vs.  pocet_faktur ✓\n0.234.567 ✗  vs.  0.234567 ✓\n0.87+F06 ✗  vs.  0.87+E06 ✓"
+  },
+  {
+    cat: "Proces překladu",
+    term: "Syntaktická analýza",
+    formula: "kontroluje strukturu vyšších\njednotek jazyka (výrazy, příkazy, ...)",
+    def: "Syntaktická analýza kontroluje správnost vyšších jednotek jazyka – posloupností tokenů (výrazů, příkazů, deklarací).",
+    exp: "Realizuje se obvykle <b>zásobníkovým automatem</b> nad bezkontextovou gramatikou. Vyžaduje silnější aparát než lex. analýza, protože musí pracovat s vnořenými strukturami (závorky, bloky, ...).",
+    ex: "if (podmínka) then (příkaz)\nif (podmínka) then (příkaz) else (příkaz)\nrepeat (posloupnost příkazů) until (podmínka)"
+  },
+  {
+    cat: "Proces překladu",
+    term: "Sémantická analýza",
+    formula: "kontroluje význam vět\n(typy, kompatibilita, ...)",
+    def: "Sémantická analýza kontroluje význam vět – tedy zda zápis dává smysl (typy proměnných, kompatibilita operandů, deklarace identifikátorů, ...).",
+    exp: "Tato kontrola už není čistě syntaktická – využívá tabulku symbolů a kontext.",
+    ex: "if Pole = 2 then ...   (Pole je typu array → sémantická chyba)"
+  },
+  {
+    cat: "Proces překladu",
+    term: "Kompilátor vs. interpret",
+    formula: "Kompilátor: zdrojový kód → cílový kód\nInterpret: čte zdroj a přímo provádí",
+    def: "<b>Kompilátor</b> je program, který čte program ve vyšším programovacím jazyce (zdrojový kód) a produkuje cílový program (spustitelný kód).\n<b>Interpret</b> je program, který čte zdrojový program, analyzuje jej a zajišťuje provádění příslušných operací.",
+    exp: "<b>Kompilátor:</b> rychlejší běh, ale složitější vývoj a horší portabilita.<br><b>Interpret:</b> jednodušší vývoj, snadné ladění, dobrá portabilita, ale pomalejší běh (analýza při každém spuštění, většinou bez optimalizací).",
+    ex: ""
+  },
+
+  // ============================================================
+  // KATEGORIE: ABECEDA, ŘETĚZCE, JAZYKY
+  // ============================================================
+  {
+    cat: "Formální jazyky",
+    term: "Abeceda",
+    formula: "A = { a, b, c, ..., x, y, z }   nebo   B = { 0, 1 }",
+    def: "Abeceda je konečná množina prvků, které nazýváme symboly.",
+    exp: "Stejně jako u přirozeného jazyka potřebujeme nejprve písmena (symboly), abychom z nich mohli skládat slova. Důležité je slovo <b>konečná</b> – abeceda nesmí být nekonečná.",
+    ex: "A = {0,1}, A = {a,b,...,z}, A = {0,1,...,9}"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Řetězec nad abecedou",
+    formula: "x = a₁a₂...aₖ₋₁aₖ ,   kde aᵢ ∈ A pro i = 1,...,k",
+    def: "Řetězec nad abecedou A je libovolná konečná posloupnost symbolů z abecedy A.",
+    exp: "Řetězec je prostě <b>slovo</b> složené ze symbolů zvolené abecedy. Slovo „konečná\" je důležité – nekonečná posloupnost není řetězec.",
+    ex: "0101011 je řetězec nad A = {0,1}\n4.573.3 je řetězec nad B = {.,0,1,...,9}\n0.A567 NENÍ řetězec nad B = {.,0,1,...,9}"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Délka řetězce",
+    formula: "x = a₁a₂...aₖ₋₁aₖ ,   |x| = k",
+    def: "Délka řetězce je rovna počtu symbolů v řetězci. Pro x = a₁a₂...aₖ₋₁aₖ s aᵢ ∈ A pro i = 1,...,k platí |x| = k.",
+    exp: "Prostě <b>spočítáš symboly</b>. Délka prázdného řetězce je 0.",
+    ex: "|0101011| = 7,   |abcde| = 5,   |ε| = 0"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Prázdný řetězec",
+    formula: "ε     (někdy též e)\n|ε| = 0",
+    def: "Řetězec s nulovou délkou se nazývá prázdný řetězec a značí se ε (v některých textech e).",
+    exp: "Prázdný řetězec je <b>jedinečný řetězec o délce 0</b>. Pozor: ε ≠ ∅ – ε je řetězec (slovo s 0 symboly), ∅ je prázdná množina (jazyk bez slov). Podobně {ε} ≠ ∅ – první obsahuje jeden prvek (prázdné slovo), druhá neobsahuje nic.",
+    ex: "Pro x·ε = ε·x = x – ε je neutrální prvek vůči zřetězení."
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Obrácený řetězec",
+    formula: "x = a₁a₂...aₖ   ⟹   xᴿ = aₖaₖ₋₁...a₂a₁",
+    def: "Jestliže x = a₁a₂...aₖ je řetězec nad abecedou A, potom xᴿ = aₖaₖ₋₁...a₂a₁ je obrácený řetězec k řetězci x.",
+    exp: "Platí <code>(xᴿ)ᴿ = x</code>. Prostě obrátíš pořadí symbolů zezadu dopředu.",
+    ex: "x = abcde ⟹ xᴿ = edcba"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Zřetězení řetězců (konkatenace)",
+    formula: "x = a₁...aₖ ,   y = b₁...bₗ\nx·y = a₁a₂...aₖb₁b₂...bₗ",
+    def: "Jestliže x = a₁a₂...aₖ a y = b₁b₂...bₗ, potom řetězec xy = a₁a₂...aₖb₁b₂...bₗ nazýváme zřetězením řetězců x a y (značíme x·y).",
+    exp: "Prostě napíšeš oba řetězce za sebe. Operace je <b>asociativní</b>, ale <b>NEKOMUTATIVNÍ</b> (xy ≠ yx obecně).",
+    ex: "x = ab, y = cd  ⟹  x·y = abcd,   y·x = cdab"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Tvrzení: uzavřenost A* na zřetězení",
+    formula: "∀ x, y ∈ A* :   x·y ∈ A*",
+    def: "Tvrzení: Množina všech řetězců nad danou abecedou je uzavřená vzhledem k operaci zřetězení.",
+    exp: "Když vezmu dva řetězce nad abecedou A a zřetězím je, výsledek je opět řetězec nad A. Důkaz triviální: každý symbol výsledku patří do A.",
+    ex: ""
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Tvrzení: (xᴿ)ᴿ = x",
+    formula: "(xᴿ)ᴿ = x",
+    def: "Tvrzení: Obrácení obráceného řetězce je opět původní řetězec.",
+    exp: "Otočíš slovo dvakrát = máš zpět původní slovo.",
+    ex: "x = abcde,   xᴿ = edcba,   (xᴿ)ᴿ = abcde = x"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Prefix, podřetězec, sufix (postfix)",
+    formula: "x = u·v·w   ⟹   u = prefix, v = podřetězec, w = sufix",
+    def: "Jestliže x = a₁...aᵢ...aⱼ...aₘ, potom:\n• u = a₁...aᵢ je prefix řetězce x\n• v = aᵢ₊₁...aⱼ je podřetězec řetězce x\n• w = aⱼ₊₁...aₘ je sufix (postfix) řetězce x",
+    exp: "Prefix = začátek slova. Sufix = konec slova. Podřetězec = libovolný souvislý úsek uprostřed. Prázdný řetězec ε je prefix, sufix i podřetězec libovolného slova.",
+    ex: "x = 0101: prefixy = {ε,0,01,010,0101}, sufixy = {ε,1,01,101,0101}, podřetězce = {ε,0,1,01,10,010,101,0101}"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Množina A* (a A⁺)",
+    formula: "A* = množina všech řetězců nad A   (včetně ε)\nA⁺ = A* − {ε}   (bez prázdného řetězce)",
+    def: "Nechť A je libovolná abeceda. Množina všech řetězců nad abecedou A se označuje A*. Množina všech neprázdných řetězců nad A se označuje A⁺.",
+    exp: "<b>A*</b> obsahuje všechny možné řetězce, které lze složit ze symbolů abecedy A – včetně prázdného řetězce ε. Je <b>vždy nekonečná</b> (pokud A je neprázdná). Platí <code>A⁺ = A* − {ε}</code>.",
+    ex: "A = {0,1}: A* = {ε, 0, 1, 00, 01, 10, 11, 000, 001, ...}"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Formální jazyk",
+    formula: "L ⊆ A*",
+    def: "Nechť A je daná abeceda. Potom libovolná podmnožina L ⊆ A* je formální jazyk nad abecedou A.",
+    exp: "Jazyk je <b>množina vybraných řetězců</b> z A*. Je-li L konečná → konečný jazyk. Nekonečná → nekonečný jazyk. Může být i prázdný (∅) nebo obsahovat jen prázdné slovo {ε}.<br><b>Pozor:</b> ∅ ≠ {ε} – první je úplně prázdná množina, druhá obsahuje jeden prvek (prázdné slovo).",
+    ex: "L₁ = {ε, a, aa, aaa} = {aⁱ | i = 0,1,2,3} – konečný\nL₂ = {a, aa, aaa, ...} = {aⁱ | i > 0} – nekonečný"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Operace nad jazyky (∪, ∩, \\)",
+    formula: "L₁ ∪ L₂ = {y | y ∈ L₁ ∨ y ∈ L₂}\nL₁ ∩ L₂ = {y | y ∈ L₁ ∧ y ∈ L₂}\nL₁ \\ L₂ = {y | y ∈ L₁ ∧ y ∉ L₂}",
+    def: "Jazyky jsou množiny, takže lze používat běžné množinové operace – sjednocení, průnik, rozdíl.",
+    exp: "Doplněk jazyka L vzhledem k A* je <code>A* \\ L</code> – tedy „všechno ostatní“.",
+    ex: ""
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Zřetězení jazyků",
+    formula: "L = L₁ · L₂ = { x·y  |  x ∈ L₁ ∧ y ∈ L₂ }",
+    def: "Operace zřetězení jazyků: L = L₁·L₂ = {xy | x ∈ L₁ ∧ y ∈ L₂}.",
+    exp: "Vytvoříme všechny dvojice (jedno slovo z L₁ + jedno slovo z L₂) a zřetězíme je. Výsledný jazyk obsahuje všechny tyto kombinace.",
+    ex: "L₁ = {a,b,...,z},  L₂ = {a,b,...,z,0,1,...,9}*\nL₁·L₂ = množina všech identifikátorů (slovo začínající písmenem)"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "n-tá mocnina jazyka",
+    formula: "L⁰ = {ε}\nLⁿ = L · Lⁿ⁻¹    pro n ≥ 1",
+    def: "Nechť L je jazyk, potom n-tou mocninu jazyka definujeme: L⁰ = {ε}, Lⁿ = L·Lⁿ⁻¹ pro n ≥ 1.",
+    exp: "L⁰ je <b>vždy</b> {ε} (i pro prázdný jazyk – pozor, tohle je často matoucí!). L¹ = L. L² = všechny dvojice řetězců z L napsané za sebou. Lⁿ = n-tice slov z L zřetězené dohromady.",
+    ex: "L = {ab, ba}:\nL¹ = {ab, ba}\nL² = {abab, abba, baab, baba}\nL³ = 8-prvková množina trojic"
+  },
+  {
+    cat: "Formální jazyky",
+    term: "Iterace jazyka (L*, L⁺)",
+    formula: "L* = L⁰ ∪ L¹ ∪ L² ∪ L³ ∪ ...\nL⁺ = L¹ ∪ L² ∪ L³ ∪ ...\nPlatí:  L* = L⁺ ∪ {ε},   L⁺ = L·L* = L*·L",
+    def: "Iterace L* (Kleeneho hvězda) je sjednocení všech mocnin jazyka L (od L⁰). Pozitivní iterace L⁺ je totéž, ale bez L⁰.",
+    exp: "Můžeš si to představit jako: „libovolný počet (i 0) zřetězení slov z L\". Pro <code>L⁺</code> musí být alespoň jedno slovo.",
+    ex: "L = {ab}: L⁺ = {ab, abab, ababab, ...}; L* = {ε, ab, abab, ababab, ...}"
+  },
+
+  // ============================================================
+  // KATEGORIE: GRAMATIKY
+  // ============================================================
+  {
+    cat: "Gramatiky",
+    term: "Formální gramatika",
+    formula: "G = (N, T, P, S)",
+    def: "Gramatikou nazýváme čtveřici G = (N, T, P, S), kde:\n• N je konečná množina neterminálů\n• T je konečná množina terminálů, přičemž N ∩ T = ∅\n• S ∈ N je počáteční (startovní, iniciační) symbol\n• P je množina přepisovacích pravidel, která je konečnou podmnožinou\n   množiny (N ∪ T)*·N·(N ∪ T)* × (N ∪ T)*",
+    exp: "<b>Gramatika = generativní způsob popisu jazyka</b> (na rozdíl od automatu, který slova rozpoznává).<br><b>Neterminály</b> = pomocné symboly, které musí být dále přepsány (značíme velkými písmeny).<br><b>Terminály</b> = vlastní symboly výsledných slov (malá písmena).<br><b>Pravidla</b> α → β říkají „α můžeš nahradit β\". Na <b>levé straně musí být alespoň jeden neterminál</b>.<br><b>Počáteční symbol</b> S je výchozí bod každé derivace.",
+    ex: "G = ({A}, {a,b}, P, A), P = {A → aAb | ε}\nGeneruje L(G) = {aⁿbⁿ | n ≥ 0}"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Relace derivace (přímé odvození) ⇒",
+    formula: "α ⇒_G β    ⟺    ∃ pravidlo γ → δ ∈ P\n     takové, že α = α₁γα₂  a  β = α₁δα₂",
+    def: "Buď G = (N, T, P, S) gramatika. Potom nad množinou (N ∪ T)* definujeme relaci derivace ⇒_G následujícím způsobem: jestliže α ∈ (N∪T)* a β ∈ (N∪T)*, potom dané řetězce jsou v relaci ⇒_G (tj. α ⇒_G β), pokud v P existuje pravidlo γ → δ a v α se vyskytuje podřetězec γ, který se nahradí za δ a vznikne β.",
+    exp: "<b>Přímé odvození</b> = jeden krok přepsání podle nějakého pravidla z P. „<b>α ⇒ β</b>\" čteme „z α v jednom kroku odvodíme β\".<br><b>⇒*</b> značí „v libovolném (i 0) počtu kroků\". <b>⇒ⁿ</b> znamená přesně n kroků.",
+    ex: "G: B → AC, A → aA | a, C → 1 | 1C\nB ⇒ AC ⇒ aAC ⇒ aaC ⇒ aa1"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Větná forma",
+    formula: "V = { α | S ⇒* α,   α ∈ (N ∪ T)* }",
+    def: "Nechť G = (N, T, P, S) je gramatika. Množinu řetězců α ∈ (N ∪ T)*, které jsou odvoditelné z počátečního symbolu S, nazýváme množina větných forem.",
+    exp: "Větná forma je <b>jakýkoli mezivýsledek</b> derivace – ještě v něm mohou být neterminály. Když jich už není, jde o <b>větu jazyka</b>.",
+    ex: ""
+  },
+  {
+    cat: "Gramatiky",
+    term: "Jazyk specifikovaný gramatikou L(G)",
+    formula: "L(G) = { w | S ⇒* w,   w ∈ T* }",
+    def: "Nechť G = (N, T, P, S) je gramatika. Jazykem L(G) specifikovaným gramatikou G nazýváme množinu řetězců w ∈ T*, které jsou odvoditelné z počátečního symbolu S.",
+    exp: "Klíčové: <b>w musí obsahovat jen terminály</b> (žádné neterminály). Až když odvození „doběhne\" k samým terminálům, máme slovo jazyka.",
+    ex: "G: P = {A → aAb | ε}, S = A  ⟹  L(G) = {aⁿbⁿ | n ≥ 0}"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Ekvivalentní gramatiky",
+    formula: "G₁ ~ G₂   ⟺   L(G₁) = L(G₂)",
+    def: "Gramatiky G₁ a G₂ jsou ekvivalentní, pokud platí L(G₁) = L(G₂).",
+    exp: "Tentýž jazyk může být popsán <b>vícero různými gramatikami</b>. Nezáleží na tvaru pravidel, jen na výsledné množině generovaných slov.",
+    ex: "G₁: A → B | AC, B → a, C → a|b|...|z\nG₂: D → a | aE, E → EE | a|b|...|z\nObě generují „všechna slova začínající písmenem a\""
+  },
+  {
+    cat: "Gramatiky",
+    term: "Chomského klasifikace gramatik",
+    formula: "Typ 0 — neomezená:   α → β  bez omezení (jen α obsahuje neterminál)\nTyp 1 — kontextová:  α → β,  |β| ≥ |α|, α má tvar α₁Aα₂\nTyp 2 — bezkontextová: A → β,  A ∈ N, β ∈ (N∪T)*\nTyp 3 — regulární:    A → bB  nebo  A → b\n                       (A,B ∈ N, b ∈ T)",
+    def: "Nechť G = (N,T,P,S) je gramatika. Potom G je:\n• <b>typu 0 (neomezená)</b> – na pravidla nejsou žádná omezení,\n• <b>typu 1 (kontextová)</b> – každé pravidlo má tvar α → β, kde α ∈ (N∪T)*N(N∪T)*, β ∈ (N∪T)⁺ a |β| ≥ |α|,\n• <b>typu 2 (bezkontextová)</b> – každé pravidlo má tvar A → β, kde A ∈ N, β ∈ (N∪T)*,\n• <b>typu 3 (regulární)</b> – každé pravidlo má tvar A → bB nebo A → b, kde A,B ∈ N, b ∈ T.",
+    exp: "Hierarchie podle <b>míry omezení tvaru pravidel</b>. Čím vyšší typ (3), tím přísnější tvar a tím slabší vyjadřovací síla. Platí <b>vnoření</b>: každá regulární gramatika je bezkontextová, každá bezkontextová je kontextová, každá kontextová je bez omezení.<br><b>Pozn.</b> Pro povolení prázdného slova v kontextové/regulární gramatice se přidá nový start. symbol S₁ a pravidla S₁ → S, S₁ → ε.",
+    ex: "Regulární: S → 0S | 1S | 0 | 1\nBezkontextová: E → E+T | T,  T → T*F | F,  F → (E) | a"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Hierarchie gramatik",
+    formula: "regulární  ⊂  bezkontextová  ⊂  kontextová  ⊂  bez omezení\n   (typ 3)        (typ 2)         (typ 1)        (typ 0)",
+    def: "Z definice jednotlivých typů gramatik plyne:\n• Každá regulární gramatika G je bezkontextová.\n• Každá bezkontextová gramatika G je kontextová.\n• Každá kontextová gramatika G je gramatikou bez omezení.",
+    exp: "Vyšší typ = <b>přísnější tvar</b> pravidel = <b>menší vyjadřovací síla</b>. Třídy se vnořují, takže každá regulární je automaticky i kontextová atd.",
+    ex: ""
+  },
+  {
+    cat: "Gramatiky",
+    term: "Hierarchie jazyků (regulární / bezkontextový / kontextový)",
+    formula: "regulární ⊂ bezkontextové ⊂ kontextové ⊂ bez omezení",
+    def: "Jazyk nazýváme <b>regulární</b>, jestliže je možné jej generovat regulární gramatikou.\nJazyk nazýváme <b>bezkontextový</b>, jestliže je možné jej generovat bezkontextovou gramatikou.\nJazyk nazýváme <b>kontextový</b>, jestliže je možné jej generovat kontextovou gramatikou.\nJazyk nazýváme <b>bez omezení</b>, jestliže je možné jej generovat gramatikou bez omezení.",
+    exp: "Klasifikace jazyků kopíruje klasifikaci gramatik. Třídy se <b>striktně</b> zužují (každá regulární je i bezkontextová, ale ne naopak – ∃ jazyky které jsou BK ale ne reg.).",
+    ex: "L = {0,1}⁺ – regulární\nL = {aⁿbⁿ | n ≥ 1} – bezkontextový (ale ne regulární)\nL = {aⁿbⁿcⁿ | n ≥ 1} – kontextový (ale ne bezkontextový)"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Doplnění prázdného slova v gramatice",
+    formula: "Přidáme nový start. symbol S₁ a pravidla:\n     S₁ → S\n     S₁ → ε",
+    def: "Někdy potřebujeme specifikovat jazyk obsahující prázdné slovo i pro kontextové a regulární gramatiky (definice kontextové/regulární gramatiky by to vylučovaly). Tradičně se to řeší přidáním nového počátečního symbolu S₁ a dvou přepisovacích pravidel S₁ → S a S₁ → ε.",
+    exp: "Definice typu 1 a typu 3 nedovolují, aby pravá strana pravidla byla ε (resp. typ 1 vyžaduje |β| ≥ |α|). Pokud chceme do jazyka zařadit i prázdné slovo, použijeme tento <b>technický trik</b> a stále mluvíme o gramatice kontextové/regulární.",
+    ex: ""
+  },
+  {
+    cat: "Gramatiky",
+    term: "Bezkontextový jazyk",
+    formula: "L je bezkontextový  ⟺  ∃ BKG G : L = L(G)",
+    def: "Jazyk nazýváme bezkontextový, jestliže je možné jej generovat bezkontextovou gramatikou (typu 2).",
+    exp: "Důležitá třída – obsahuje většinu konstrukcí programovacích jazyků (vnořené závorky, výrazy, ...). Ekvivalentně: jazyk přijímaný zásobníkovým automatem.",
+    ex: "L = {aⁿbⁿ | n ≥ 1}\nG = ({A,S}, {0,1}, P, S),  P = {S → A | 0S1, A → 01}"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Levá / pravá derivace",
+    formula: "Levá derivace = v každém kroku se přepisuje\n             nejlevější neterminál ve větné formě.\nPravá derivace = analogicky se přepisuje\n             nejpravější neterminál.",
+    def: "Derivaci α₀ ⇒ α₁ ⇒ ... ⇒ αₙ, kde každou přímou derivaci αᵢ ⇒ αᵢ₊₁ realizujeme tak, že ve větné formě αᵢ nahrazujeme první neterminál zleva (zprava), nazýváme levou (pravou) derivací.",
+    exp: "Pomáhá <b>standardizovat</b> postup odvození – jinak je pořadí přepisování libovolné a je obtížné porovnávat dvě derivace.",
+    ex: "P = {S → AB, A → 0AB | 0, B → 1}\nLevá:  S ⇒ AB ⇒ 0ABB ⇒ 00BB ⇒ 001B ⇒ 0011\nPravá: S ⇒ AB ⇒ A1 ⇒ 0AB1 ⇒ 0A11 ⇒ 0011"
+  },
+  {
+    cat: "Gramatiky",
+    term: "Jednoznačnost / nejednoznačnost gramatiky",
+    formula: "G je nejednoznačná   ⟺   ∃ w ∈ L(G) :\n   pro w existuje více levých derivací.",
+    def: "Bezkontextová gramatika G = (N,T,P,S) je nejednoznačná (víceznačná), jestliže existuje alespoň jedno slovo w ∈ L(G) takové, že pro w existuje více levých (pravých) derivací.",
+    exp: "Nejednoznačnost vede k <b>více možným významům</b> stejného slova – v překladači katastrofa. Klasický příklad je „dangling else\".<br>Otázka jednoznačnosti BKG je <b>nerozhodnutelná</b> – obecný algoritmus, který by to rozhodl, neexistuje.<br>Někdy lze gramatiku transformovat na ekvivalentní jednoznačnou, jindy ne (vnitřně nejednoznačné jazyky).",
+    ex: "S → if b then S else S | if b then S | a"
+  },
+
+  // ============================================================
+  // KATEGORIE: KONEČNÉ AUTOMATY
+  // ============================================================
+  {
+    cat: "Konečné automaty",
+    term: "Deterministický konečný automat (DKA)",
+    formula: "M = (Q, T, δ, q₀, F)",
+    def: "Deterministický konečný automat M je pětice M = (Q, T, δ, q₀, F), kde:\n• Q je konečná množina vnitřních stavů automatu\n• T je konečná množina přípustných vstupních symbolů (vstupní abeceda)\n• δ je přechodová funkce  δ : Q × T → Q\n• q₀ je počáteční stav automatu (q₀ ∈ Q)\n• F je množina koncových (přijímacích) stavů (F ⊆ Q)",
+    exp: "Automat čte vstupní řetězec znak po znaku. <b>V každém kroku má jeden aktuální stav</b>. Po přečtení znaku <code>δ(stav, znak) = nový stav</code>. <b>Determinismus</b> = pro daný (stav, znak) je <b>právě jeden</b> následník.<br>Slovo <b>přijímá</b>, pokud po jeho přečtení skončí v některém z koncových stavů.",
+    ex: "M = ({q₀,q₁,q₂,q₃}, {0,1}, δ, q₀, {q₀})"
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Konfigurace KA (počáteční / koncová)",
+    formula: "Konfigurace = (q, w) ∈ Q × T*\nPočáteční konfigurace = (q₀, w)\nKoncová konfigurace = (q, ε), kde q ∈ F",
+    def: "Nechť M = (Q,T,δ,q₀,F) je konečný automat. Potom dvojici (q, w) ∈ Q × T* nazýváme <b>konfigurací</b> konečného automatu M.\n<b>Počáteční konfigurace</b> je (q₀, w), kde w je vstupní řetězec.\n<b>Koncová konfigurace</b> je libovolná konfigurace (q, ε), kde q ∈ F.",
+    exp: "Konfigurace popisuje <b>aktuální stav výpočtu</b>: ve kterém stavu jsem a jaký zbývá ještě nepřečtený vstup.<br>• <b>Počáteční:</b> jsem v q₀, mám před sebou celé slovo w.<br>• <b>Koncová:</b> už jsem přečetl celé slovo (zbývá ε) a jsem v koncovém stavu.",
+    ex: "Vstup: w = 1010 → počáteční: (q₀, 1010); koncová třeba: (q₀, ε)"
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Relace přechodu KA  ⊢",
+    formula: "(q₁, aw)  ⊢  (q₂, w),   jestliže  δ(q₁, a) = q₂",
+    def: "Buď M = (Q,T,δ,q₀,F) konečný automat. Potom nad množinou všech konfigurací definujeme relaci přechodu ⊢ pro q₁,q₂ ∈ Q, w ∈ T*, a ∈ T následovně:\n(q₁, aw) ⊢ (q₂, w),   jestliže δ(q₁, a) = q₂.",
+    exp: "Jeden „takt\" automatu: přečte první znak a vstupu, podle δ přejde do nového stavu a posune se o jeden symbol vpřed.<br><b>⊢*</b> značí libovolný (i 0) počet kroků za sebou.",
+    ex: "(q₀, 1010) ⊢ (q₁, 010) ⊢ (q₃, 10) ⊢ (q₂, 0) ⊢ (q₀, ε)"
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Dosažitelný stav",
+    formula: "q je dosažitelný   ⟺   ∃ w ∈ T* :  (q₀, w) ⊢ⁿ (q, ε)",
+    def: "Stav q ∈ Q je dosažitelný, jestliže existuje přechod (q₀, w) ⊢ⁿ (q, ε) pro nějaké n ≥ 0 a w ∈ T*.",
+    exp: "Dosažitelný stav je <b>libovolný stav, do kterého se umím dostat</b> z počáteční konfigurace po konečném počtu kroků. Stav q₀ je vždy dosažitelný (n = 0). Nedosažitelné stavy lze z automatu odstranit, aniž se změní rozpoznávaný jazyk.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Přijímání slova KA",
+    formula: "M přijímá w   ⟺   (q₀, w) ⊢*  (q, ε)  pro nějaké q ∈ F",
+    def: "Nechť M = (Q,T,δ,q₀,F) je konečný automat. Potom automat M přijímá (akceptuje) slovo w ∈ T*, jestliže platí (q₀, w) ⊢* (q, ε) pro nějaké q ∈ F.",
+    exp: "Slovo je přijato, pokud <b>(1) bylo celé přečteno</b> a <b>(2) automat skončí v koncovém stavu</b>. Pokud na nějakém kroku není definován přechod, slovo přijato není.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Jazyk určený konečným automatem M",
+    formula: "L(M) = { w ∈ T*  |  (q₀, w) ⊢* (q, ε),   q ∈ F }",
+    def: "Nechť M = (Q,T,δ,q₀,F) je konečný automat. Jazyk L(M) specifikovaný konečným automatem M je množina řetězců\nL(M) = { w | (q₀, w) ⊢* (q, ε),   w ∈ T*,  q ∈ F }.",
+    exp: "L(M) = <b>množina všech slov, která automat přijme</b>. Je to jazyk, který automat „rozpoznává\". Každý jazyk přijímaný KA je <b>regulární</b>.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Reprezentace KA (tabulka, diagram)",
+    formula: "(A) Přechodovou tabulkou:\n         | 0  | 1\n  ─────  ┼────┼────\n   q₀    | q₂ | q₁\n   q₁    | q₃ | q₀\n\n(B) Přechodovým diagramem:\n  uzly = stavy,  šipky = přechody,\n  → = počáteční stav, ⊙ = koncový stav.",
+    def: "Konečný automat lze reprezentovat dvěma standardními způsoby: <b>přechodovou tabulkou</b> (řádky stavy, sloupce vstupní symboly, v buňkách nový stav) nebo <b>přechodovým diagramem</b> (orientovaný graf).",
+    exp: "Tabulka je přesnější a snadno z ní program. Diagram je názornější pro lidskou intuici.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Nedeterministický konečný automat (NDKA)",
+    formula: "M = (Q, T, δ, q₀, F),    δ : Q × T → 2^Q",
+    def: "Nedeterministický konečný automat M je pětice M = (Q, T, δ, q₀, F), kde:\n• Q je konečná množina vnitřních stavů automatu\n• T je konečná množina přípustných vstupních symbolů\n• δ je <b>přechodové zobrazení</b>  δ : Q × T → 2^Q\n• q₀ je počáteční stav (q₀ ∈ Q)\n• F je množina koncových stavů (F ⊆ Q)",
+    exp: "Rozdíl oproti DKA: <b>δ vrací množinu stavů</b> (může být prázdná, jednoprvková nebo víceprvková). Automat má v daném okamžiku <b>na výběr</b>, kam přejít.<br>Symbol <b>2^Q</b> značí množinu všech podmnožin Q. Pokud Q = {a,b}, pak 2^Q = {∅, {a}, {b}, {a,b}}.<br>Lze si představit, že NDKA <b>paralelně provádí všechny větve výpočtu</b>; přijímá, pokud alespoň jedna větev úspěšně skončí v koncovém stavu.",
+    ex: "δ(q₀, 1) = {q₁, q₂}  – ve stavu q₀ na vstupu 1 lze přejít do q₁ nebo q₂"
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Relace přechodu / přijímání NDKA",
+    formula: "(q₁, aw) ⊢ (q₂, w),   jestliže  q₂ ∈ δ(q₁, a)\n\nM přijímá w  ⟺  (q₀, w) ⊢* (q, ε), q ∈ F\nL(M) = { w | (q₀, w) ⊢* (q, ε), q ∈ F }",
+    def: "Buď M = (Q,T,δ,q₀,F) NDKA. Pak (q₁, aw) ⊢ (q₂, w), jestliže q₂ ∈ δ(q₁, a). Automat M přijímá slovo w, jestliže (q₀, w) ⊢* (q, ε) pro nějaké q ∈ F.",
+    exp: "Stejné jako u DKA, jen přechod si vybírá z množiny možných cílových stavů.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Vztah DKA a NDKA (věta o ekvivalenci)",
+    formula: "∀ NDKA M₁  ∃ DKA M₂ :  L(M₁) = L(M₂)",
+    def: "Věta: Nechť L(M₁) je jazyk přijímaný nějakým nedeterministickým konečným automatem. Potom existuje deterministický konečný automat M₂, který přijímá stejný jazyk, tj. L(M₁) = L(M₂).",
+    exp: "<b>Nedeterminismus u KA nedává navíc žádnou sílu</b> – ke každému NDKA umím sestrojit ekvivalentní DKA. Důsledek: NDKA i DKA přijímají stejnou třídu jazyků (regulární jazyky).",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Konstrukce DKA z NDKA (podmnožinová konstrukce)",
+    formula: "M₂ = (2^Q, T, δ₂, {q₀}, F₂)\nδ₂(S, a) = ⋃_{q ∈ S} δ(q, a)\nF₂ = { S ⊆ Q  |  S ∩ F ≠ ∅ }",
+    def: "Postup konstrukce ekvivalentního DKA z NDKA:\n1. Vyjdeme z počátečního stavu NDKA – stav {q₀}.\n2. Postupně použitím přechodového zobrazení δ vyplňujeme přechodovou tabulku. Jednotlivé množiny nově vznikajících stavů považujeme vždy za jeden stav nově konstruovaného automatu.\n3. Tyto stavy postupně dáváme do prvního sloupce tabulky a opět pro ně vyplňujeme přechodovou tabulku.\n4. Všech možných podmnožin je 2^|Q|, a proto po konečném počtu kroků skončíme (nová množina stavů již nevznikne).\n5. Všechny podmnožiny obsahující alespoň jeden koncový stav původního NDKA prohlásíme za koncové stavy DKA.",
+    exp: "Klíčová myšlenka: <b>stav DKA = množina možných stavů NDKA</b>. Když NDKA může být ve více stavech současně (paralelní výpočet), DKA si pamatuje celou tu množinu jako jeden stav.<br><b>Velikost:</b> v nejhorším případě má DKA 2^|Q| stavů (proto NDKA může být mnohem kompaktnější).",
+    ex: "NDKA: δ(q₀,1) = {q₀,q₁}, δ(q₁,1) = {q₂}, F = {q₂}\n→ DKA má stavy {q₀}, {q₀,q₁}, {q₀,q₁,q₂}, ...\n→ koncové: ty podmnožiny obsahující q₂"
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Vztah KA a regulárních gramatik (souhrnná věta)",
+    formula: "L je regulární   ⟺   L je rozpoznatelný KA",
+    def: "Souhrnná věta: Jazyk L je regulární právě tehdy, když je rozpoznatelný konečným automatem.\nSpojuje dvě věty:\n• Věta 1: Ke každé regulární gramatice G existuje KA M takový, že L(M) = L(G).\n• Věta 2: Ke každému KA M existuje regulární gramatika G taková, že L(M) = L(G).",
+    exp: "<b>Regulární gramatiky a konečné automaty popisují přesně tutéž třídu jazyků</b>. Generativní (gramatika) i akceptační (automat) pohled jsou ekvivalentní – jen různé úhly pohledu na to samé.<br>Praktický význam: <b>lexikální analyzátor lze automaticky vygenerovat</b> z popisu regulární gramatiky. To je základ nástrojů jako lex / flex.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Konstrukce KA z regulární gramatiky",
+    formula: "Q = N ∪ {A},  A je nový stav (A ∉ N)\nq₀ = S\nF = {A}     pokud S → ε ∉ P\nF = {A, S}  pokud S → ε ∈ P\n\nPro pravidlo  B → aC ∈ P :   C ∈ δ(B, a)\nPro pravidlo  B → a  ∈ P :   A ∈ δ(B, a)\nv ostatních případech    δ(B, a) = ∅",
+    def: "Věta: Nechť G = (N,T,P,S) je regulární gramatika. Potom existuje konečný automat M = (Q,T,δ,q₀,F) takový, že L(M) = L(G).\nDůkaz – konstrukce KA: Q = N ∪ {A} (A je nový symbol), T zůstává, q₀ = S, F = {A} (resp. {S, A}, pokud S → ε ∈ P). δ se definuje podle pravidel:\n• Pro B → a ∈ P: A ∈ δ(B, a)\n• Pro B → aC ∈ P: C ∈ δ(B, a)\n• Jinak δ(B, a) = ∅",
+    exp: "Stavy automatu odpovídají neterminálům + jeden nový „akceptující\" stav A. Pravidlo gramatiky <code>B → aC</code> se přeloží jako přechod z B do C přes a.",
+    ex: "G: P = {S → 0S | 1S | 0 | 1}\n→ KA má stavy {S, A}, q₀ = S, F = {A}\n   δ(S,0) = {S,A},  δ(S,1) = {S,A}"
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Konstrukce regulární gramatiky z KA",
+    formula: "N = Q,   T zůstává,   S = q₀\n\nPro δ(B, a) = C :\n   B → aC  ∈ P\n   B → a   ∈ P,  pokud C ∈ F\nNavíc:\n   S → ε  ∈ P,   pokud  q₀ ∈ F",
+    def: "Věta: Nechť M = (Q,T,δ,q₀,F) je konečný automat. Potom existuje taková regulární gramatika G = (N,T,P,S), že L(M) = L(G).\nDůkaz – konstrukce gramatiky z DKA:\n• N = Q\n• T zůstává\n• S = q₀\n• Pravidla P:\n   – B → aC, jestliže δ(B, a) = C\n   – B → a, jestliže δ(B, a) = K ∈ F\n   – S → ε, jestliže q₀ ∈ F",
+    exp: "Opačný směr: <b>každý přechod automatu se stane pravidlem gramatiky</b>. Pokud přechod vede do koncového stavu, vznikne i koncové (terminální) pravidlo.<br>V praxi méně použitelná konstrukce – obvykle jdeme směrem gramatika → automat.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Vlastnosti KA: délka přijatých slov",
+    formula: "Nechť KA má n stavů. Potom množina přijatých slov je:\n  a) neprázdná  ⟺  KA přijme slovo s délkou < n\n  b) nekonečná  ⟺  KA přijme slovo s délkou d : n ≤ d < 2n",
+    def: "Věta: Množina slov přijatých KA s n stavy je:\na) <b>neprázdná</b> právě tehdy, když KA přijme slovo s délkou menší než n,\nb) <b>nekonečná</b> právě tehdy, když KA přijme slovo s délkou d takovou, že n ≤ d < 2n.",
+    exp: "Důkaz se opírá o stejnou myšlenku jako pumping lemma – při čtení slova délky ≥ n musí KA některým stavem projít dvakrát (princip holubníku → smyčka v automatu).<br><b>Praktický důsledek:</b> Test na prázdnost / nekonečnost jazyka přijímaného KA je <b>rozhodnutelný</b> – stačí prozkoumat slova omezené délky.",
+    ex: ""
+  },
+  {
+    cat: "Konečné automaty",
+    term: "Vlastnosti regulárních jazyků (uzavřenost)",
+    formula: "L₁, L₂ regulární   ⟹   L₁ ∪ L₂,  L₁ ∩ L₂,\n                              T*\\L₁,  L₁·L₂  jsou také regulární",
+    def: "Věta: Nechť L₁ a L₂ jsou regulární jazyky. Potom L₁ ∪ L₂, L₁ ∩ L₂, T* \\ L₁ a L₁·L₂ jsou také regulární jazyky.",
+    exp: "Třída regulárních jazyků je <b>uzavřená</b> vůči sjednocení, průniku, doplňku i zřetězení.<br><b>Konstrukce důkazu (intuitivně):</b><ul><li>∪: dva automaty paralelně, stačí jeden přijme</li><li>∩: dva automaty paralelně, oba musí přijmout</li><li>doplněk: stačí F' = Q \\ F</li><li>zřetězení: dva automaty za sebou (z F prvního navazuje druhý)</li></ul>",
+    ex: ""
+  },
+
+  // ============================================================
+  // KATEGORIE: REGULÁRNÍ VÝRAZY
+  // ============================================================
+  {
+    cat: "Regulární výrazy",
+    term: "Regulární výraz nad abecedou Σ",
+    formula: "(induktivní definice)\n• ∅ je regulární výraz\n• ε je regulární výraz\n• a je regulární výraz pro každé a ∈ Σ\n• jsou-li r₁, r₂ reg. výrazy nad Σ, pak také:\n      r₁ + r₂   (sjednocení)\n      r₁ · r₂   (zřetězení)\n      r₁*       (iterace)",
+    def: "Množina všech regulárních výrazů nad abecedou Σ je definována induktivně:\n• ∅ je regulární výraz,\n• ε je regulární výraz,\n• a je regulární výraz pro každé písmeno a ∈ Σ,\n• jsou-li r₁ a r₂ regulární výrazy nad abecedou Σ, potom r₁ + r₂, r₁r₂ a r₁* jsou také regulární výrazy nad abecedou Σ.",
+    exp: "Reg. výraz je další <b>kompaktní zápis regulárního jazyka</b>. Jen tři operátory: alternativa <b>+</b>, zřetězení <b>·</b>, iterace <b>*</b>.",
+    ex: "(0+1)* — všechna binární slova\n0*10*10* — slova s právě dvěma jedničkami\na(b+c)*d — a, pak libovolný počet b a c, pak d"
+  },
+  {
+    cat: "Regulární výrazy",
+    term: "Jazyk reg. výrazu",
+    formula: "L(∅)     = ∅\nL(ε)     = {ε}\nL(a)     = {a}\nL(r₁+r₂) = L(r₁) ∪ L(r₂)\nL(r₁r₂)  = L(r₁) · L(r₂)\nL(r*)    = L(r)*",
+    def: "Každému regulárnímu výrazu odpovídá jazyk podle těchto pravidel.",
+    exp: "Operátory regulárního výrazu odpovídají operacím na jazycích – sjednocení, zřetězení a iteraci.",
+    ex: ""
+  },
+  {
+    cat: "Regulární výrazy",
+    term: "Kleeneho věta",
+    formula: "Jazyk L je regulární  ⟺  L je popsatelný\n                          regulárním výrazem.",
+    def: "Jazyky definované regulárními výrazy jsou regulární jazyky, tj. jazyky rozpoznávané konečnými automaty.",
+    exp: "<b>Tři ekvivalentní popisy regulárních jazyků:</b><ul><li>regulární gramatika</li><li>konečný automat (DKA i NDKA)</li><li>regulární výraz</li></ul>Mezi všemi třemi existují algoritmické převody.",
+    ex: ""
+  },
+
+  // ============================================================
+  // KATEGORIE: PUMPING LEMMA
+  // ============================================================
+  {
+    cat: "Pumping lemma",
+    term: "Pumping lemma pro regulární jazyky",
+    formula: "L regulární  ⟹  ∃ p ∈ ℕ : ∀ w ∈ L, |w| ≥ p\n     lze psát  w = w₁w₂w₃,  kde:\n        1) |w₂| > 0\n        2) |w₁w₂| ≤ p\n        3) ∀ i ≥ 0 :  w₁w₂ⁱw₃ ∈ L",
+    def: "Nechť L je regulární jazyk. Potom existuje taková konstanta p, že pro všechna slova w ∈ L s |w| ≥ p, můžeme slovo w psát ve tvaru w = w₁w₂w₃, kde |w₂| > 0, |w₁w₂| ≤ p a současně platí w₁w₂ⁱw₃ ∈ L pro všechna i ≥ 0.",
+    exp: "Intuice: v každém <b>dostatečně dlouhém</b> slově regulárního jazyka <b>existuje smyčka</b> (část w₂), kterou lze libovolně-krát „pumpovat\" (opakovat nebo úplně vynechat) a stále zůstaneme v jazyce.<br>Důvod: konečný automat má jen p stavů, takže při čtení slova délky ≥ p musí <b>nutně projít stejným stavem dvakrát</b> – mezi těmito dvěma průchody vznikne smyčka.<br><b>Použití (důkazy nereg.):</b> Lemma je <b>implikace</b> – pokud závěr pro nějaký jazyk neplatí, jazyk nemůže být regulární. Naopak ale neplatí (pokud platí závěr, ještě to neznamená, že L je regulární).",
+    ex: "Důkaz, že L = {0ⁿ1ⁿ | n ≥ 1} není regulární – ať si w₁w₂ rozdělíme jakkoli, pumpováním porušíme rovnováhu počtu 0 a 1."
+  },
+  {
+    cat: "Pumping lemma",
+    term: "Příklady neregulárních jazyků",
+    formula: "L = {0ⁿ1ⁿ | n ≥ 1}\nL = {w | w obsahuje stejný počet a a b}\nL = {0ⁿ1ᵐ | n > m}\nL = {ww | w ∈ {0,1}*}\nL = {aⁿbⁿcⁿ | n ≥ 0}     (není ani BK)",
+    def: "Typické jazyky, které NEJSOU regulární – KA je nedokáže rozpoznat (důkaz pumping lemmatem):\n• {0ⁿ1ⁿ | n ≥ 1}\n• {0ⁿ1ᵐ | n > m}\n• {0ⁿ1ᵐ0ⁿ | n,m ≥ 0}\n• {ww | w ∈ {0,1}*}\n• {aⁿbⁿcⁿ | n ≥ 0}\n• {w | w obsahuje stejný počet a a b}",
+    exp: "Společný rys: vyžadují <b>počítání</b> nebo <b>zapamatování si</b> neomezeného množství informace, což KA s konečně mnoha stavy nezvládne.<br><b>Praktický dopad:</b> S jazykem {0ⁿ1ⁿ} je ekvivalentní např. správné párování závorek <begin>...<end>. <b>Ani tuto jednoduchou konstrukci KA neumí rozpoznat</b> – proto potřebujeme silnější ZA pro syntaktickou analýzu programovacích jazyků.",
+    ex: ""
+  },
+  {
+    cat: "Pumping lemma",
+    term: "Pumping lemma pro bezkontextové jazyky",
+    formula: "L bezkontextový  ⟹  ∃ p, q ∈ ℕ : ∀ w ∈ L, |w| > p\n     lze psát  w = x₁ y₁ v y₂ x₂,  kde:\n        1) |y₁ v y₂| ≤ q\n        2) y₁y₂ ≠ ε\n        3) ∀ i ≥ 0 :  x₁ y₁ⁱ v y₂ⁱ x₂ ∈ L",
+    def: "Pro každý bezkontextový jazyk L existují takové konstanty p, q ∈ ℕ, že libovolné slovo w ∈ L, pro které platí |w| > p, je možné vyjádřit ve tvaru w = x₁y₁vy₂x₂, kde 1) |y₁vy₂| ≤ q, 2) y₁y₂ ≠ ε, 3) x₁y₁ⁱvy₂ⁱx₂ ∈ L pro každé i ≥ 0.",
+    exp: "Analogie regulárního pumping lemmatu, jen se pumpují <b>dvě části zároveň</b> (y₁ a y₂). Důvod: v derivačním stromu dostatečně dlouhého slova se musí nějaký neterminál opakovat na cestě od kořene k listu, což vytvoří „pumpovatelnou\" strukturu.<br>Stejně jako u regulárního lemmatu se používá k <b>důkazu, že jazyk NENÍ bezkontextový</b>.",
+    ex: "Důkaz, že L = {aⁿbⁿcⁿ | n ≥ 1} není bezkontextový – při pumpování nelze udržet rovnost počtu všech tří symbolů."
+  },
+
+  // ============================================================
+  // KATEGORIE: ZÁSOBNÍKOVÉ AUTOMATY
+  // ============================================================
+  {
+    cat: "Zásobníkové automaty",
+    term: "Zásobníkový automat (ZA) – přijímání koncovým stavem",
+    formula: "M = (Q, Σ, Γ, δ, q₀, Z₀, F)",
+    def: "Zásobníkový automat M je sedmice M = (Q, Σ, Γ, δ, q₀, Z₀, F), kde:\n• Q je konečná množina vnitřních stavů automatu\n• Σ je konečná množina vstupních symbolů (vstupní abeceda)\n• Γ je konečná množina zásobníkových symbolů (zásobníková abeceda)\n• δ je přechodové zobrazení  δ : Q × (Σ ∪ {ε}) × Γ → konečné podmnožiny Q × Γ*\n• q₀ je počáteční stav automatu (q₀ ∈ Q)\n• Z₀ je počáteční zásobníkový symbol (Z₀ ∈ Γ)\n• F je množina koncových stavů (F ⊆ Q)",
+    exp: "ZA = konečný automat <b>+ neomezený zásobník</b>. To mu dává sílu rozpoznávat širší třídu jazyků (bezkontextové).<br>Přechodové zobrazení <b>δ(q, a, Z) = (q', γ)</b> znamená: ve stavu q při čtení vstupu a a vrcholu zásobníku Z přejdi do stavu q' a vrchol zásobníku Z nahraď řetězcem γ.<br>ZA může vykonat krok i <b>bez přečtení vstupního symbolu</b> (ε-krok).<br>ZA je z principu <b>nedeterministický</b>.",
+    ex: "M = ({q₀,q₁,q₂,q₃}, {0,1}, {Z,0}, δ, q₀, Z, {q₀,q₃}) přijímá L = {0ⁿ1ⁿ | n ≥ 0}"
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Zásobníkový automat – přijímání prázdným zásobníkem",
+    formula: "M = (Q, Σ, Γ, δ, q₀, Z₀)         (bez F)",
+    def: "Zásobníkový automat M (přijímající prázdným zásobníkem) je šestice M = (Q, Σ, Γ, δ, q₀, Z₀), kde Q, Σ, Γ, δ, q₀, Z₀ mají stejný význam jako u sedmice. Takto definovaný ZA nemá žádné koncové stavy. Slovo je přijato, pokud se přečte celé a zásobník je prázdný.",
+    exp: "Druhý způsob přijímání: nestačí dorazit do koncového stavu, ale je třeba <b>vyprázdnit zásobník</b>. Tyto dva typy ZA mají <b>stejnou rozpoznávací sílu</b> (existují vzájemné konstrukce).",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Konfigurace ZA a relace přechodu",
+    formula: "Konfigurace = (q, w, γ) ∈ Q × Σ* × Γ*\nPočáteční:  (q₀, w, Z₀)\nKoncová (přijímání kon. stavem):  (q, ε, γ),  q ∈ F\nKoncová (přijímání pr. zás.):    (q, ε, ε),  q ∈ Q\n\n(q₁, aw, Xα) ⊢ (q₂, w, βα),\n     jestliže (q₂, β) ∈ δ(q₁, a, X)",
+    def: "Konfigurací ZA M = (Q,Σ,Γ,δ,q₀,Z₀,F) rozumíme trojici (q, w, γ) ∈ Q × Σ* × Γ*. Počáteční konfigurací je (q₀, w, Z₀); koncová je (q, ε, γ) pro q ∈ F. Relace přechodu je definována (q₁, aw, X) ⊢ (q₂, w, β) ⟺ (q₂, β) ∈ δ(q₁, a, X).",
+    exp: "Konfigurace = <b>aktuální stav + zbytek vstupu + obsah zásobníku</b>. Při přechodu se přečte první znak vstupu a vrchol zásobníku se nahradí novým řetězcem (může být i prázdný = pop, nebo více symbolů = push).",
+    ex: "(q₀, 0011, Z) ⊢ (q₁, 011, 0Z) ⊢ (q₁, 11, 00Z) ⊢ (q₂, 1, 0Z) ⊢ (q₂, ε, Z) ⊢ (q₃, ε, ε)"
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Výpočet ZA",
+    formula: "Výpočet = posloupnost konfigurací\nK₀, K₁, K₂, ..., Kₙ ,\nkde Kᵢ ⊢ Kᵢ₊₁  pro i = 0, ..., n-1.",
+    def: "Nechť M = (Q,Σ,Γ,δ,q₀,Z₀,F) je zásobníkový automat. Potom výpočtem ZA rozumíme posloupnost konfigurací (kroků) K₀, K₁, K₂, ..., Kₙ takových, že Kᵢ ⊢ Kᵢ₊₁ pro i = 0, ..., n-1.",
+    exp: "Výpočet je <b>posloupnost po sobě jdoucích konfigurací</b>, kde každá vznikla z předchozí jedním krokem (podle relace přechodu ⊢). Začíná počáteční konfigurací (q₀, w, Z₀) a může (ale nemusí) skončit koncovou konfigurací.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Přijímání slova ZA, jazyk L(M)",
+    formula: "M přijímá w  ⟺  (q₀, w, Z₀) ⊢*  (q, ε, γ),  q ∈ F\n\nL(M) = { w ∈ Σ* | (q₀, w, Z₀) ⊢* (q, ε, γ),\n                    q ∈ F, γ ∈ Γ* }",
+    def: "Nechť M = (Q,Σ,Γ,δ,q₀,Z₀,F) je zásobníkový automat. Potom automat M přijímá slovo w ∈ Σ*, jestliže platí (q₀, w, Z₀) ⊢* (q, ε, γ) pro nějaké q ∈ F a γ ∈ Γ*. Jazyk L(M) je množina všech takových slov.",
+    exp: "Stejný princip jako u KA, jen místo dvojice máme trojici a navíc nás (u koncového stavu) <b>nezajímá obsah zásobníku</b> – stačí se dostat do koncového stavu.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Vzájemná ekvivalence ZA (kon. stav ↔ prázdný zás.)",
+    formula: "Věta 1: ZA(prázdný zás.)  ⟹  ∃ ekvivaletní ZA(kon. stav)\nVěta 2: ZA(kon. stav)     ⟹  ∃ ekvivaletní ZA(prázdný zás.)",
+    def: "Věta 1: Nechť M₁ je zásobníkový automat přijímající prázdným zásobníkem. Potom lze sestrojit zásobníkový automat M₂ přijímající koncovým stavem takový, že L(M₁) = L(M₂).\nVěta 2: Nechť M₁ je zásobníkový automat přijímající koncovým stavem. Potom lze sestrojit zásobníkový automat M₂ přijímající prázdným zásobníkem takový, že L(M₁) = L(M₂).",
+    exp: "<b>Oba typy ZA mají stejnou rozpoznávací sílu.</b> Lze mezi nimi volně převádět:<br>• <b>Prázdný zás. → kon. stav:</b> přidám nový speciální zásobníkový symbol „dno\" pod Z₀ a nový koncový stav. Když se zásobník vyprázdní (kromě dna), přejdu do koncového stavu.<br>• <b>Kon. stav → prázdný zás.:</b> z koncového stavu přidám přechody, které postupně vyprazdňují zásobník. Plus ošetření „předčasného nekoncového vyprázdnění\" pomocí speciálního dna.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Nedeterminismus ZA",
+    formula: "ZA je z principu NEDETERMINISTICKÝ",
+    def: "Zásobníkový automat je z principu nedeterministický (například už tím, že jsou povoleny ε-kroky, tj. změna stavu bez posunu čtecí hlavy).",
+    exp: "<b>Klíčový rozdíl oproti KA:</b> u KA nedeterminismus nezvyšoval sílu, ale <b>u ZA ano</b>! Existují BK jazyky, které lze přijmout pouze nedeterministickým ZA, ne deterministickým.<br>Nedeterminismus se často využívá při návrhu ZA – např. při „uhádnutí poloviny\" slova v jazyce {wwᴿ}.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Vztah BKG a ZA (souhrnné tvrzení)",
+    formula: "Následující jsou ekvivalentní:\n  1) L je generovaný BK gramatikou\n  2) L je přijímaný ZA koncovým stavem\n  3) L je přijímaný ZA prázdným zásobníkem",
+    def: "Tvrzení: Pro libovolný jazyk L jsou následující podmínky ekvivalentní:\n• L je jazyk generovaný bezkontextovou gramatikou,\n• L je jazyk přijímaný zásobníkovým automatem (koncovým stavem),\n• L je jazyk přijímaný zásobníkovým automatem prostřednictvím vyprázdnění zásobníku.",
+    exp: "Bezkontextové jazyky = jazyky přijímané zásobníkovými automaty. <b>BKG ↔ ZA jsou ekvivalentní popisy stejné třídy jazyků.</b> Mezi všemi třemi způsoby existují algoritmické převody.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Konstrukce ZA z bezkontextové gramatiky",
+    formula: "M = ({q}, T, N ∪ T, δ, q, S, ∅)\n\n1) Pro každé pravidlo A → α ∈ P:\n      (q, α) ∈ δ(q, ε, A)\n2) Pro každý terminál a ∈ T:\n      δ(q, a, a) = { (q, ε) }",
+    def: "Věta: Nechť G = (N,T,P,S) je bezkontextová gramatika. Potom můžeme zkonstruovat zásobníkový automat M takový, že L(M) = L(G).\nKonstrukce nedeterministického ZA s jediným stavem q:\n• Σ = T,  Γ = N ∪ T,  q₀ = q,  Z₀ = S\n• δ(q, ε, A) obsahuje (q, α) pro každé pravidlo A → α z P\n• δ(q, a, a) = {(q, ε)} pro všechna a ∈ T",
+    exp: "Idea: <b>na zásobníku se simuluje levostranná derivace</b>.<ul><li>Pravidlo A → α se realizuje tak, že vrchol zásobníku A nahradíme α (rozvineme).</li><li>Když se na vrcholu zásobníku objeví terminál a, přečteme ho ze vstupu a smažeme ze zásobníku (kontrola shody).</li></ul>Slovo je přijato vyprázdněním zásobníku.",
+    ex: "G: E → E+T | T,  T → T*F | F,  F → (E) | a\n→ M = ({q}, {+,*,(,),a}, {+,*,(,),a,E,T,F}, δ, q, E, ∅)\n   δ(q, ε, E) = {(q, E+T), (q, T)}\n   δ(q, ε, T) = {(q, T*F), (q, F)}\n   δ(q, ε, F) = {(q, (E)), (q, a)}\n   δ(q, x, x) = {(q, ε)} pro všechna x ∈ {+,*,(,),a}"
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Konstrukce BKG ze zásobníkového automatu",
+    formula: "Neterminály mají tvar [qZp],  q,p ∈ Q, Z ∈ Γ\n+ nový start. symbol S\n\nPravidla se vytvářejí podle tvaru δ\n(zakódují aktuální stav, vrchol zásob., nový stav)",
+    def: "Věta: Nechť M = (Q,Σ,Γ,δ,q₀,Z₀,F) je zásobníkový automat. Potom existuje bezkontextová gramatika G = (N,T,P,S) taková, že L(M) = L(G).\nDůkaz – konstrukce gramatiky: Z automatu se vytvoří gramatika tak, že množina neterminálů využívá symbolů [qZp], kde q,p ∈ Q a Z ∈ Γ, a nový symbol S. Tím se zakódují konfigurace (aktuální stav, stav zásobníku, nový stav) a podle tvaru δ a vstupního symbolu se vytvoří pravidla.",
+    exp: "Opačný směr: ke každému ZA lze sestrojit BKG generující stejný jazyk. Konstrukce je <b>technicky komplikovanější</b> – neterminál [qZp] reprezentuje „výpočet ze stavu q s vrcholem zásobníku Z, který skončí ve stavu p s vyprázdněním Z\".<br>Detaily v Češka 2002. Pro zkoušku stačí znát, že to <b>jde</b>.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Deterministický zásobníkový automat (DZA)",
+    formula: "DZA = ZA s podmínkou:\n   pro každý (q, Z) buď\n     • δ(q, a, Z) má pro každé a ∈ Σ nejvýše 1 prvek a δ(q, ε, Z) = ∅\n     • nebo δ(q, a, Z) = ∅ pro všechna a a δ(q, ε, Z) má nejvýše 1 prvek",
+    def: "Deterministický zásobníkový automat M je sedmice M = (Q, Σ, Γ, δ, q₀, Z₀, F), kde δ je přechodová funkce δ : Q × (Σ ∪ {ε}) × Γ → Q × Γ* taková, že buď pro každé a obsahuje δ(q, a, Z) nejvýše jeden prvek a δ(q, ε, Z) = ∅, nebo δ(q, a, Z) = ∅ pro všechna a a δ(q, ε, Z) obsahuje nejvýše jeden prvek.",
+    exp: "Na rozdíl od KA platí, že <b>nedeterminismus u ZA rozšiřuje vyjadřovací sílu</b> – ne každý jazyk přijímaný ZA je přijímatelný DZA.<br><b>Obecný algoritmus převodu nedeterministického ZA na deterministický neexistuje!</b>",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Deterministický bezkontextový jazyk (DBJ)",
+    formula: "DBJ ⊊ bezkontextové jazyky",
+    def: "Jazyk L se nazývá deterministický bezkontextový jazyk, jestliže existuje deterministický zásobníkový automat, který jazyk L přijímá. Třída deterministických bezkontextových jazyků (DBJ) je vlastní podtřídou jazyků bezkontextových.",
+    exp: "Praktický význam: <b>DBJ se používají pro popis programovacích jazyků</b>, protože pro ně lze sestavit efektivní (lineární) syntaktický analyzátor bez návratů.<br>Příklad jazyka, který je BK ale není DBJ: <code>L = {wwᴿ | w ∈ {a,b}⁺}</code> – nelze deterministicky rozhodnout, kde je „polovina\" slova.",
+    ex: "L = {wcwᴿ | w ∈ {a,b}⁺} je DBJ – středový oddělovač c jednoznačně určí polovinu."
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Vlastnosti bezkontextových jazyků (uzavřenost)",
+    formula: "L₁, L₂ bezkontextové ⟹ L₁ ∪ L₂ je bezkontextový.\n\nL₁ ∩ L₂ NEMUSÍ být bezkontextový!",
+    def: "Věta: Nechť L₁ a L₂ jsou bezkontextové jazyky. Potom L₁ ∪ L₂ je také bezkontextový jazyk.\nVěta: Třída bezkontextových jazyků není uzavřena vůči operaci průnik.",
+    exp: "BK jazyky jsou uzavřené na sjednocení (snadno: sjednocením gramatik s novým start. symbolem), ale <b>nejsou uzavřené na průnik a doplněk</b>.<br>Důkaz neuzavřenosti na ∩: <code>L₁ = {aⁱbʲcᵏ | i = j}</code> a <code>L₂ = {aⁱbʲcᵏ | j = k}</code> jsou BK, ale jejich průnik <code>{aⁿbⁿcⁿ}</code> BK není.",
+    ex: ""
+  },
+  {
+    cat: "Zásobníkové automaty",
+    term: "Chomského hierarchie (s DBJ)",
+    formula: "regulární ⊂ deterministické BK ⊂ bezkontextové ⊂ kontextové ⊂ bez omezení\n  (typ 3)       (DBJ)                 (typ 2)        (typ 1)       (typ 0)",
+    def: "Rozšíření Chomského hierarchie o třídu deterministických bezkontextových jazyků (DBJ): regulární ⊊ DBJ ⊊ bezkontextové ⊊ kontextové ⊊ bez omezení.",
+    exp: "DBJ je přesně třída jazyků přijímaných <b>deterministickými ZA</b>. Jde o vlastní podtřídu BK jazyků – ne každý BK jazyk je DBJ.<br>Prakticky: <b>DBJ = jazyky programovacích jazyků</b> (existují efektivní lineární parsery bez zpětného navracení).",
+    ex: "DBJ: L = {wcwᴿ}  —  zásobník se naplní na levo od c, pak čte doprava a kontroluje\nNe-DBJ: L = {wwᴿ}  —  nelze deterministicky určit střed slova"
+  },
+
+  // ============================================================
+  // KATEGORIE: JAK POČÍTAT (praktické výpočty)
+  // ============================================================
+  {
+    cat: "Jak počítat",
+    term: "Jak odvozovat slovo z gramatiky (derivace)",
+    formula: "Krok derivace: α ⇒ β\n   = vyber neterminál v α, použij pravidlo, nahraď\n\nLevá derivace: vždy nejlevější neterminál\nPravá derivace: vždy nejpravější neterminál",
+    def: "Derivace (výpočet gramatiky) je postupné přepisování větných forem začínající od počátečního symbolu S pomocí pravidel z P, dokud nezůstanou jen terminály.",
+    exp: "<b>Postup krok po kroku:</b><ol><li>Začni od S (počáteční symbol).</li><li>Vyber nějaký neterminál ve větné formě.</li><li>Vyber pravidlo tvaru <code>A → α</code> kde A je ten neterminál.</li><li>Nahraď A výrazem α — vznikne nová větná forma.</li><li>Opakuj, dokud nezůstanou jen terminály — výsledek je slovo jazyka.</li></ol><b>Levá derivace:</b> vždy přepisuješ úplně nejlevější neterminál.<br><b>Pravá derivace:</b> vždy přepisuješ úplně nejpravější neterminál.",
+    ex: "G: S → AB, A → 0AB | 0, B → 1\n\nLevá derivace slova 0011:\nS ⇒ AB      (S→AB, přepíšeme S)\n  ⇒ 0ABB    (A→0AB, nejlevější neterminál A)\n  ⇒ 00BB    (A→0, nejlevější neterminál A)\n  ⇒ 001B    (B→1, nejlevější neterminál B)\n  ⇒ 0011    (B→1)\n\nPravá derivace slova 0011:\nS ⇒ AB  ⇒ A1  ⇒ 0AB1  ⇒ 0A11  ⇒ 0011"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak navrhnout gramatiku pro daný jazyk",
+    formula: "Postup: 1) pochop vzor jazyka\n         2) zapiš pravidla\n         3) ověř derivací",
+    def: "Postup návrhu gramatiky pro daný jazyk L.",
+    exp: "<b>Strategie podle tvaru jazyka:</b><ul><li><b>L = {aⁿbⁿ}</b> → S → aSb | ε  (každá iterace přidá jedno a a jedno b symetricky)</li><li><b>L = slova končící 0</b> → S → S0 | S1 | 0  (neterminál si pamatuje, že musíme ještě přijít k 0)</li><li><b>L = {aⁱbʲcᵏ, i,j,k>0}</b> → S → ABC, A → aA | a, B → bB | b, C → cC | c</li><li><b>L = {wwᴿ}</b> → S → aSa | bSb | ε  (symetrie: vnější symboly musí být stejné)</li></ul>Vždy po návrhu otestuj: odvoď několik slov a ověř, že správná slova derivovat lze a chybná ne.",
+    ex: "L = {aⁿbⁿ | n ≥ 0}:\nG = ({S}, {a,b}, {S → aSb | ε}, S)\n\nDůkaz a²b²: S ⇒ aSb ⇒ aaSbb ⇒ aabb ✓\nDůkaz ab není v L → S⇒aSb⇒ab ✓ (n=1), ab ∈ L ✓"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak simulovat výpočet konečného automatu",
+    formula: "Krok: (q, aw) ⊢ (q', w)   kde δ(q,a) = q'\n\nSlovo přijato ⟺ skončíme v (q, ε), q ∈ F",
+    def: "Simulace výpočtu KA je postupné čtení vstupního slova symbol po symbolu a sledování přechodů podle δ.",
+    exp: "<b>Postup krok po kroku:</b><ol><li>Začni ve stavu q₀, před sebou máš celé vstupní slovo w.</li><li>Přečti první symbol a vstupu.</li><li>Podle δ(aktuální stav, a) přejdi do nového stavu.</li><li>Opakuj pro každý symbol slova.</li><li>Po přečtení posledního symbolu: jsi-li v F → slovo přijato, jinak zamítnuto.</li></ol><b>Pokud δ(q, a) není definováno</b> (chybí přechod) → slovo se zamítne (automat se \"zasekne\").",
+    ex: "M = ({q₀,q₁,q₂}, {0,1}, δ, q₀, {q₀})\nδ: q₀─0→q₁, q₀─1→q₂, q₁─0→q₀, q₁─1→q₂, q₂─0→q₂, q₂─1→q₂\n\nVstup w = 010:\n(q₀, 010) ⊢ (q₁, 10) ⊢ (q₂, 0) ⊢ (q₂, ε)\nq₂ ∉ F  →  slovo 010 ZAMÍTNUTO\n\nVstup w = 00:\n(q₀, 00) ⊢ (q₁, 0) ⊢ (q₀, ε)\nq₀ ∈ F  →  slovo 00 PŘIJATO"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak simulovat výpočet zásobníkového automatu",
+    formula: "Krok: (q, aw, Xγ) ⊢ (q', w, βγ)\n     kde (q', β) ∈ δ(q, a, X)\n\nPřijímání: (q₀, w, Z₀) ⊢* (q, ε, _),  q ∈ F",
+    def: "Simulace výpočtu ZA sleduje trojici (stav, zbytek vstupu, obsah zásobníku) — v každém kroku se přečte symbol ze vstupu, ze zásobníku se čte vrchol a zásobník se modifikuje.",
+    exp: "<b>Postup krok po kroku:</b><ol><li>Začni: stav = q₀, vstup = w, zásobník = [Z₀] (Z₀ nahoře).</li><li>Podívej se na aktuální stav, vrchol zásobníku a první symbol vstupu.</li><li>Najdi přechod δ(stav, symbol, vrchol) = (nový stav, nový řetězec).<br>— vrchol zásobníku se NAHRADÍ novým řetězcem (zleva = nový vrchol).<br>— pokud nový řetězec = ε, vrchol se odstraní (pop).</li><li>Posuň se o symbol vpřed ve vstupu (nebo ne, je-li to ε-přechod).</li><li>Opakuj, dokud není vstup přečten.</li><li>Přijímání: vstup přečten a aktuální stav ∈ F (nebo zásobník prázdný).</li></ol><b>Pozor na nedeterminismus</b> – může existovat více možných přechodů, musíme prozkoumat všechny větve.",
+    ex: "ZA pro L = {0ⁿ1ⁿ | n≥0}:\nδ(q₀, 0, Z) = {(q₀, 0Z)}   — push 0\nδ(q₀, 0, 0) = {(q₀, 00)}   — push 0\nδ(q₀, 1, 0) = {(q₁, ε)}    — pop 0, přejdi q₁\nδ(q₁, 1, 0) = {(q₁, ε)}    — pop 0\nδ(q₁, ε, Z) = {(q₂, Z)}    — prázdný vstup, dno zásobníku\nF = {q₂}\n\nVstup 0011:\n(q₀,0011,Z) ⊢ (q₀,011,0Z) ⊢ (q₀,11,00Z)\n            ⊢ (q₁,1,0Z)   ⊢ (q₁,ε,Z)\n            ⊢ (q₂,ε,Z)  →  PŘIJATO (q₂∈F)"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak kreslit diagram konečného automatu (KA)",
+    formula: "⃝  = stav\n⊙  = koncový (přijímací) stav (dvojitý kroužek)\n→  = počáteční stav (šipka odnikud)\na  = popisek přechodu (vstupní symbol)",
+    def: "Stavový diagram (přechodový diagram) konečného automatu je orientovaný ohodnocený graf: uzly jsou stavy, hrany jsou přechody.",
+    exp: "<b>Pravidla kreslení:</b><ul><li><b>Každý stav</b> = jeden kruh (uzavřená kružnice).</li><li><b>Počáteční stav</b> = šipka přicházející z prázdného prostoru (nebo nápis <i>start</i>).</li><li><b>Koncový stav</b> = dvojitý kroužek (dvě soustředné kružnice).</li><li><b>Přechod δ(q, a) = p</b> = šipka z q do p s popiskem <code>a</code>.</li><li>Více přechodů mezi stejnými stavy = více popisků na jedné šipce (oddělené čárkou).</li><li>Přechod do sebe (smyčka) = šipka ze stavu zpět do stejného stavu.</li><li><b>Mrtvý stav</b> (sink): pokud z přechodové tabulky chybí přechod, kreslí se někdy extra stav <i>qₓ</i> s nepřijímajícím stavem — všechny nedefinované přechody vedou tam a smyčky z qₓ zpět do qₓ.</li></ul>",
+    ex: "Automat přijímající slova nad {0,1} se sudým počtem nul:\n\n  →(q₀)──0──>(q₁)\n     ↑           |\n     └────0──────┘\n     q₀ a q₁ se liší\n     o paritě nul.\n     q₀ je zároveň koncový (sudý = 0 nul je OK).\n\nKresba:\n  →⊙q₀  ─0→  ⃝q₁\n     ↑  ←0─  ↓\n   smyčka 1    smyčka 1\n   (q₀─1→q₀, q₁─1→q₁)"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak kreslit diagram zásobníkového automatu (ZA)",
+    formula: "Popisek šipky:   a, X / γ\n   a = přečtený vstupní symbol (nebo ε)\n   X = vrchol zásobníku (co čteme)\n   γ = čím X nahradíme (co zapíšeme zpět)",
+    def: "Diagram ZA je orientovaný graf se stavy (uzly) a přechody (hranami). Každá hrana je ohodnocena trojicí: vstupní symbol, vrchol zásobníku / nová hodnota zásobníku.",
+    exp: "<b>Formát popisku přechodu:</b><br><code>a, X / γ</code><ul><li><code>a</code> = symbol čtený ze vstupu (<code>ε</code> = nic nečteme, jen manipulujeme zásobník)</li><li><code>X</code> = symbol na vrcholu zásobníku (musí tam být, jinak přechod nelze provést)</li><li><code>γ</code> = čím X nahradíme: <ul><li><code>ε</code> = X ze zásobníku odstraníme (pop)</li><li><code>YX</code> = X nahradíme YX, takže Y je nový vrchol (push Y, X zůstane pod ním)</li><li><code>X</code> = zásobník se nemění</li></ul></li></ul><b>Stavy:</b> stejná pravidla jako u KA (→ počáteční, ⊙ koncový).<br><b>Tip:</b> přechody, kde jen čteš ze vstupu a zásobníku neměníš, piš jako <code>a, X / X</code>.",
+    ex: "ZA pro L = {0ⁿ1ⁿ | n ≥ 0}:\n\n  →⃝q₀ ──0, Z / 0Z──> ⃝q₀  (push 0, dno Z zůstane)\n  ⃝q₀ ──0, 0 / 00──> ⃝q₀  (push dalsi 0)\n  ⃝q₀ ──1, 0 / ε──>  ⃝q₁  (pop 0, přejdi do q₁)\n  ⃝q₁ ──1, 0 / ε──>  ⃝q₁  (pop 0)\n  ⃝q₁ ──ε, Z / Z──>  ⊙q₂  (dno zásobníku = hotovo)\n\nZápisem na hranu: u první hrany stojí \"0, Z/0Z\"\nmeanin: čtu 0 ze vstupu, vídím Z navrchu → nahraď Z za 0Z (push 0)"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak z přechodové tabulky nakreslit diagram (a naopak)",
+    formula: "Tabulka → diagram: každá buňka (stav, symbol) = šipka\nDiagram → tabulka: každá šipka = řádek (stav) × sloupec (symbol)",
+    def: "Přechodová tabulka a stavový diagram jsou dvě reprezentace téhož automatu — lze je volně převádět.",
+    exp: "<b>Tabulka → diagram:</b><ol><li>Každý řádek tabulky = jeden stav = jeden kruh.</li><li>Zvýrazni počáteční stav (šipka) a koncové stavy (dvojitý kruh).</li><li>Pro každou buňku δ(qᵢ, a) = qⱼ nakresli šipku z qᵢ do qⱼ s popiskem a.</li><li>Pokud více symbolů vede ze qᵢ do qⱼ, spoj je do jedné šipky: a, b.</li></ol><b>Diagram → tabulka:</b><ol><li>Řádky = všechny stavy, sloupce = všechny vstupní symboly.</li><li>Pro každou šipku z qᵢ do qⱼ s popiskem a zapiš qⱼ do buňky (qᵢ, a).</li><li>Prázdná buňka = přechod není definován (u DKA mrtvý stav).</li></ol>",
+    ex: "Tabulka DKA (nad {0,1}, přijímá slova končící 1):\n\n      | 0  | 1\n  ────┼────┼────\n→ q₀ | q₀ | q₁\n  ⊙q₁| q₀ | q₁\n\nDiagram:\n  →⃝q₀ ─1→ ⊙q₁\n      ↑         |\n      └──0──────┘\n  q₀ ─0→ q₀ (smyčka)\n  q₁ ─1→ q₁ (smyčka)"
+  },
+  {
+    cat: "Jak počítat",
+    term: "Jak použít Pumping lemma (důkaz neregulárnosti)",
+    formula: "Spor: předpokládej L regulární.\n∃ p. Vyber w ∈ L, |w| ≥ p.\nPro KAŽDÉ w₁w₂w₃ s podmínkami:\n   najdi i ≥ 0 : w₁w₂ⁱw₃ ∉ L  →  SPOR → L není reg.",
+    def: "Pumping lemma se používá k důkazu, že daný jazyk NENÍ regulární — metodou sporu.",
+    exp: "<b>Postup důkazu metodou sporu:</b><ol><li><b>Předpokládej</b>, že L je regulární → existuje konstanta p.</li><li><b>Zvolíš</b> konkrétní slovo w ∈ L s |w| ≥ p (ty vybíráš výhodné slovo).</li><li><b>Protivník</b> zvolí rozdělení w = w₁w₂w₃ splňující |w₂|>0, |w₁w₂|≤p.</li><li><b>Ty</b> musíš pro každé takové rozdělení najít i ≥ 0 takové, že w₁w₂ⁱw₃ ∉ L.</li><li>To je spor → L není regulární. □</li></ol><b>Klíč:</b> protivník vybírá rozdělení (ne ty), ale ty vybíráš w — vyber ho tak, aby tě každé rozdělení \"poškodilo\".",
+    ex: "Důkaz: L = {0ⁿ1ⁿ | n ≥ 1} není regulární.\n1) Předpokládej, že L je regulární, existuje p.\n2) Zvolím w = 0ᵖ1ᵖ ∈ L, |w| = 2p ≥ p. ✓\n3) Libovolné rozdělení w₁w₂w₃ s |w₁w₂|≤p:\n   → w₂ leží celé v části 0ᵖ, tj. w₂ = 0ᵏ, k ≥ 1.\n4) Pro i = 0: w₁w₂⁰w₃ = 0^(p-k) 1ᵖ — jiný počet 0 a 1 → ∉ L.\n5) SPOR → L není regulární. □"
+  },
+
+  // ============================================================
+  // KATEGORIE: SLOŽITOST
+  // ============================================================
+  {
+    cat: "Složitost",
+    term: "Časová složitost algoritmu",
+    formula: "T(n) = počet kroků algoritmu na vstupu délky n",
+    def: "Časová složitost algoritmu je funkce T(n), která vyjadřuje počet elementárních kroků (operací) algoritmu v závislosti na velikosti vstupu n. Hovoříme o časové složitosti (ne o čase v sekundách), protože skutečná rychlost závisí na hardware, ale řádová složitost závisí na algoritmu.",
+    exp: "Proč složitost a ne čas? Protože <b>čas závisí na HW</b>, složitost je <b>nezávislá na konkrétním počítači</b>. Místo přesného počtu kroků nás zajímá <b>řádový růst</b> pro velká n — proto používáme asymptotické notace O, Ω, Θ.",
+    ex: "Hledání v seřazeném poli n prvků: T(n) = log₂n kroků (binární vyhledávání)"
+  },
+  {
+    cat: "Složitost",
+    term: "Velké O (asymptotická horní mez)",
+    formula: "f(n) ∈ O(g(n))   ⟺   ∃ c > 0, n₀ ∈ ℕ :\n     ∀ n ≥ n₀ :  f(n) ≤ c · g(n)",
+    def: "Říkáme, že f je ve velkém O g (f ∈ O(g)), jestliže existují konstanty c > 0 a n₀ ∈ ℕ takové, že pro všechna n ≥ n₀ platí f(n) ≤ c·g(n).",
+    exp: "O(g) je <b>asymptotická horní mez</b> — říká: \"od jistého n funkce f neroste rychleji než g (s konstantou c)\".<br><b>Intuice:</b> O(n²) znamená, že algoritmus poběží na velká n nejhůře jako n². Přesnou konstantu nás nezajímá.<br><b>Nejběžnější použití:</b> worst-case analýza.",
+    ex: "3n² + 7n + 5 ∈ O(n²)   — dominuje člen n², konstanty nerozhodují\n2ⁿ ∉ O(nᵏ) pro žádné pevné k — exponenciála roste rychleji než libovolný polynom"
+  },
+  {
+    cat: "Složitost",
+    term: "Velké Ω (asymptotická dolní mez)",
+    formula: "f(n) ∈ Ω(g(n))   ⟺   ∃ c > 0, n₀ ∈ ℕ :\n     ∀ n ≥ n₀ :  f(n) ≥ c · g(n)",
+    def: "Říkáme, že f je ve velkém Ω g (f ∈ Ω(g)), jestliže existují konstanty c > 0 a n₀ ∈ ℕ takové, že pro všechna n ≥ n₀ platí f(n) ≥ c·g(n).",
+    exp: "Ω(g) je <b>asymptotická dolní mez</b> — říká: \"algoritmus potřebuje alespoň g(n) kroků\".<br>Zatímco O říká \"nejvýše\", Ω říká \"nejméně\".<br>Používá se k vyjádření, že problém <b>nelze vyřešit rychleji</b> než určitá funkce.",
+    ex: "Seřazení n prvků vyžaduje Ω(n·log n) srovnání — žádný porovnávací algoritmus to nedokáže rychleji."
+  },
+  {
+    cat: "Složitost",
+    term: "Velké Θ (asymptotická přesná mez)",
+    formula: "f(n) ∈ Θ(g(n))   ⟺   f ∈ O(g)  ∧  f ∈ Ω(g)",
+    def: "Říkáme, že f je ve velkém Θ g (f ∈ Θ(g)), jestliže f ∈ O(g) a zároveň f ∈ Ω(g). Tedy existují c₁, c₂ > 0 a n₀ takové, že c₁·g(n) ≤ f(n) ≤ c₂·g(n) pro všechna n ≥ n₀.",
+    exp: "Θ(g) je <b>přesná asymptotická mez</b> — funkce f roste <b>stejně rychle</b> jako g (liší se jen konstantou).<br>Je to nejsilnější z trojice O, Ω, Θ. Pokud platí Θ, pak automaticky platí i O i Ω.",
+    ex: "Bubble sort: T(n) = n(n-1)/2 ∈ Θ(n²)  — roste přesně kvadraticky\nBinární vyhledávání: T(n) ∈ Θ(log n)"
+  },
+  {
+    cat: "Složitost",
+    term: "Základní třídy časové složitosti",
+    formula: "logaritmická:   O(log n)\nlineární:       O(n)\nkvadratická:    O(n²)\npolynomiální:   O(nᵏ) pro pevné k\nexponenciální:  O(2ⁿ) nebo O(kⁿ), k > 1",
+    def: "Základní třídy složitosti podle řádu růstu:\n• Logaritmická O(log n): algoritmy polovičí problém v každém kroku.\n• Lineární O(n): každý prvek zpracují konstantě krát.\n• Kvadratická O(n²): typicky dva vnořené cykly.\n• Polynomiální O(nᵏ): zobecnění pro k vnořených cyklů.\n• Exponenciální O(2ⁿ): prochází exponenciálně rozsáhlý stavový prostor.",
+    exp: "Hierarchy: log n ≪ n ≪ n² ≪ nᵏ ≪ 2ⁿ<br><b>Polynomiální algoritmy</b> jsou v praxi použitelné. <b>Exponenciální</b> jsou použitelné jen pro malá n.",
+    ex: "log n: binární vyhledávání\nn: lineární procházení pole\nn·log n: merge sort, quicksort (průměr)\nn²: bubble sort, insertion sort\n2ⁿ: naivní SAT, generování podmnožin"
+  },
+  {
+    cat: "Složitost",
+    term: "Časová třída TIME(t(n))",
+    formula: "TIME(t(n)) = { L | L je rozhodnutelný TS\n                    s časovou složitostí O(t(n)) }",
+    def: "Třída TIME(t(n)) je množina jazyků, které jsou rozhodnutelné deterministickým Turingovým strojem pracujícím v čase O(t(n)).",
+    exp: "TIME(t(n)) umožňuje klasifikovat jazyky (problémy) podle toho, jak rychle je lze rozhodovat. Čím menší funkce t(n), tím \"snadnější\" jazyky třídu tvoří.",
+    ex: "TIME(n) — lineárně rozhodnutelné\nTIME(n²) — kvadraticky rozhodnutelné\nTIME(2ⁿ) — exponenciálně rozhodnutelné"
+  },
+  {
+    cat: "Složitost",
+    term: "Třída P (PTIME)",
+    formula: "P = ⋃_{k≥0} TIME(nᵏ)\n  = jazyky rozhodnutelné v polynomiálním čase",
+    def: "Třída P (PTIME) je třída všech jazyků (rozhodovacích problémů), které jsou rozhodnutelné deterministickým algoritmem v polynomiálním čase.",
+    exp: "<b>P = třída \"prakticky řešitelných\" problémů</b> — polynomiální algoritmy jsou v praxi použitelné pro rozumně velká n.<br>Třída P je <b>robustní</b> – nezávisí na konkrétním modelu výpočtu (RAM, TS, ...) ani na konstantách.",
+    ex: "P: třídění (O(n·log n)), hledání nejkratší cesty (Dijkstra O(n²)), násobení čísel, testování prvočíselnosti, lineární programování"
+  },
+  {
+    cat: "Složitost",
+    term: "Verifikační algoritmus",
+    formula: "Verifikátor V pro L:\n   V(w, c) = 1  ⟺  c je \"certifikát\" pro w ∈ L\n   Běží v polynomiálním čase v |w|",
+    def: "Verifikační algoritmus (verifikátor) pro jazyk L je algoritmus V takový, že:\n• V přijímá jako vstup slovo w a \"certifikát\" (důkaz) c.\n• V(w, c) = 1, jestliže c je platný certifikát, že w ∈ L.\n• V běží v polynomiálním čase v |w|.",
+    exp: "<b>Klíčová idea třídy NP:</b> i když nevíme, jak rychle najít řešení, umíme ho rychle <b>ověřit</b>, pokud ho někdo ukáže.<br>Příklad: SAT — najít ohodnocení proměnných je obtížné, ale ověřit, zda dané ohodnocení splňuje formuli, je jednoduché (dosadíme a zkontrolujeme).",
+    ex: "SAT: certifikát = konkrétní ohodnocení proměnných\nBarvení grafu: certifikát = přiřazení barev vrcholům\nObchodní cestující: certifikát = konkrétní cesta a její délka"
+  },
+  {
+    cat: "Složitost",
+    term: "Třída NP (NPTIME)",
+    formula: "NP = třída jazyků rozhodnutelných NDTS\n       v polynomiálním čase\n\nEkvivalentně:\nL ∈ NP  ⟺  ∃ polynomiální verifikátor V :\n   w ∈ L  ⟺  ∃ certifikát c : V(w,c) = 1",
+    def: "Třída NP (Nondeterministic Polynomial time) je třída jazyků:\n• rozhodnutelných nedeterministickým Turingovým strojem v polynomiálním čase, nebo ekvivalentně:\n• pro které existuje polynomiální verifikátor.",
+    exp: "NP = problémy, kde <b>ověření řešení je snadné</b> (polynomiální), ale <b>nalezení řešení může být obtížné</b>.<br>Platí: <b>P ⊆ NP</b> (každý prob. řešitelný deter. v pol. čase je i ověřitelný v pol. čase).<br>Otevřená otázka: <b>P = NP?</b> — nejslavnější otevřený problém matematiky/CS.",
+    ex: "NP: SAT (splnitelnost booleovské formule), Hamiltonovský cyklus, problém batohu, barvení grafu, obchodní cestující"
+  },
+  {
+    cat: "Složitost",
+    term: "Vztah P a NP",
+    formula: "P ⊆ NP\nP = NP ?  —  NEZNÁMO",
+    def: "Je dokázáno, že P ⊆ NP. Otázka, zda P = NP nebo P ⊊ NP, je dosud nerozřešeným problémem (Millennium Prize Problem).",
+    exp: "<b>Intuice:</b> \"Pokud lze řešení rychle ověřit, lze ho i rychle najít?\" — to je otázka P vs NP.<br>Většina vědců věří, že <b>P ≠ NP</b> — tedy že existují problémy v NP, které nelze efektivně řešit deterministicky.<br><b>Praktický důsledek:</b> pokud P ≠ NP, pak pro NP-těžké problémy neexistuje efektivní obecný algoritmus.",
+    ex: ""
+  },
+  {
+    cat: "Složitost",
+    term: "NP-úplnost (NP-completeness)",
+    formula: "L je NP-úplný   ⟺\n   1) L ∈ NP\n   2) ∀ L' ∈ NP :  L' ≤ₚ L   (polynomiální redukce)",
+    def: "Jazyk L je NP-úplný, jestliže:\n1. L ∈ NP,\n2. Každý jazyk L' ∈ NP je polynomiálně redukovatelný na L (tj. L' ≤ₚ L).\nL je NP-těžký, pokud splňuje podmínku 2 (ale nemusí být v NP).",
+    exp: "<b>NP-úplné problémy jsou \"nejtěžší\" problémy v NP</b> — pokud bychom pro jediný NP-úplný problém nalezli polynomiální algoritmus, všechny NP problémy by byly v P.<br><b>Polynomiální redukce</b> L' ≤ₚ L: existuje polynomiální funkce f taková, že x ∈ L' ⟺ f(x) ∈ L. Tedy umím L' \"přeložit\" na L.<br>Prakticky: nalezení NP-úplného podproblému v aplikaci = důkaz, že efektivní obecné řešení pravděpodobně neexistuje.",
+    ex: ""
+  },
+  {
+    cat: "Složitost",
+    term: "Příklady NP-úplných problémů",
+    formula: "SAT, 3-SAT, Hamiltonovský cyklus,\nObchodní cestující, Barvení grafu (k≥3),\nProblém batohu (0/1 knapsack), Klika, ...",
+    def: "Příklady NP-úplných problémů:\n• SAT (3-SAT): je daná booleovská formule v CNF splnitelná?\n• Hamiltonovský cyklus: existuje cyklus procházející každým vrcholem grafu právě jednou?\n• Obchodní cestující (TSP): existuje cesta délky ≤ k navštěvující všechna města?\n• Barvení grafu: lze vrcholy grafu obarvit k barvami tak, aby sousední vrcholy měly různou barvu (k ≥ 3)?\n• Problém batohu (0/1): lze zvolit předměty tak, aby jejich váha nepřekročila kapacitu a hodnota překročila práh?",
+    exp: "Všechny tyto problémy jsou na sobě (přes polynomiální redukce) ekvivalentní — \"stejně těžké\". Řešení jednoho by automaticky dalo řešení všech.",
+    ex: ""
+  },
+  {
+    cat: "Složitost",
+    term: "Heuristiky pro NP-úplné problémy",
+    formula: "Heuristika = algoritmus bez garance optimality,\n             ale rychlý a v praxi dobrý",
+    def: "Protože NP-úplné problémy pravděpodobně nemají polynomiální přesné algoritmy, v praxi se používají heuristiky — algoritmy, které rychle najdou \"dostatečně dobré\" (ne nutně optimální) řešení.",
+    exp: "<b>Heuristika pro SAT:</b> DPLL algoritmus — iterativní přiřazování pravdivostních hodnot proměnným s backtrackingem; propagace jednotkových klauzulí; v praxi funguje rychle.\n<br><b>Heuristika pro plnění kontejnerů (bin packing):</b> First Fit Decreasing — seřaď předměty sestupně, každý vlož do prvního kontejneru, kam se vejde.\n<br><b>Heuristika pro N dam:</b> min-konflikty — umísti dámy postupně, při kolizi přesuň dámu s největším počtem konfliktů na pozici s nejmenším počtem konfliktů.\n<br><b>Praktický důsledek existence NP problémů:</b> pro reálné aplikace (routing, scheduling, optimalizace) musíme spoléhat na heuristiky, aproximační algoritmy nebo omezovat velikost vstupu.",
+    ex: "Greedy pro TSP: vždy jdi do nejbližšího nenavštíveného města — rychlé, ale může dát cestu o 25 % delší než optimum.\nSimulated annealing: pravděpodobnostní metoda prohledávání prostoru řešení."
+  },
+
+  // ============================================================
+  // KATEGORIE: VYČÍSLITELNOST (TURINGŮV STROJ)
+  // ============================================================
+  {
+    cat: "Vyčíslitelnost",
+    term: "Turingův stroj (TS) – definice",
+    formula: "M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)",
+    def: "Turingův stroj M je sedmice M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject), kde:\n• Q je konečná množina vnitřních stavů\n• Σ je konečná vstupní abeceda (neobsahuje prázdný znak ␣)\n• Γ je konečná páskové abeceda, Σ ⊂ Γ, ␣ ∈ Γ (␣ ∉ Σ)\n• δ je přechodová funkce δ : (Q \\ {q_accept, q_reject}) × Γ → Q × Γ × {L, R}\n• q₀ ∈ Q je počáteční stav\n• q_accept ∈ Q je přijímací stav\n• q_reject ∈ Q je zamítací stav, q_reject ≠ q_accept",
+    exp: "Navrhnul <b>Alan Turing</b> (1936). TS má na rozdíl od KA a ZA <b>neomezenou pásku</b>, po které se může hlava pohybovat oběma směry.<br><b>Páska:</b> nekonečná posloupnost buněk; vstup je zapsán zleva, zbytek je ␣.<br><b>Hlavový pohyb:</b> L (doleva) nebo R (doprava).<br><b>Vstupní abeceda Σ</b> nesmí obsahovat ␣. <b>Páskové abeceda Γ</b> musí obsahovat ␣ a Σ ⊂ Γ.<br>TS pracuje <b>deterministicky</b>. Může se <b>zacyklit</b> (ani přijmout, ani zamítnout).",
+    ex: "δ(q₀, 0) = (q₁, X, R) — ve stavu q₀ čtu 0 → přejdi do q₁, přepiš 0 na X, posuň hlavu doprava"
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Konfigurace TS",
+    formula: "Konfigurace = uqv,   kde u,v ∈ Γ*, q ∈ Q\n   u = obsah pásky vlevo od hlavy\n   q = aktuální stav\n   v = obsah pásky od hlavy doprava\n\nPočáteční konfigurace: q₀ w\nKoncová: konfigurace se stavem q_accept nebo q_reject",
+    def: "Konfigurací Turingova stroje M rozumíme trojici (u, q, v) obvykle zapsanou uqv, kde u je obsah pásky vlevo od čtecí hlavy, q je aktuální stav a v je obsah pásky od čtecí hlavy doprava.\nPočáteční konfigurace pro vstup w je q₀w.\nKoncová (zastavující) konfigurace je taková, jejíž stav je q_accept nebo q_reject.",
+    exp: "Konfigurace popisuje <b>kompletní momentální snímek výpočtu TS</b>: kde jsem (stav q) a co je na pásce (u vlevo, v od hlavy doprava).",
+    ex: "Vstup w = 0011:\nPočáteční: q₀ 0011\nPo 2 krocích: X q₁ 011 (přepsáno 0 na X, posun doprava)"
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Relace přechodu TS a přijímání slova",
+    formula: "uq₁av  ⊢  uaq₂v'   (pohyb doprava)\nuaq₁v ⊢  uq₂abv  (pohyb doleva)\n\nTS přijímá w  ⟺  q₀w ⊢* uq_accept v\nTS zamítá w   ⟺  q₀w ⊢* uq_reject v",
+    def: "Přechodová relace ⊢ je definována z δ:\n• Je-li δ(q₁, a) = (q₂, b, R): uq₁av ⊢ ubq₂v (přepíšeme a→b, hlava jde doprava).\n• Je-li δ(q₁, a) = (q₂, b, L): ucq₁av ⊢ uq₂cbv (přepíšeme a→b, hlava jde doleva).\nTS přijímá slovo w, dostane-li se do q_accept. Zamítá, dostane-li se do q_reject. Může ale také cyklit (nezastaví nikdy).",
+    exp: "Tři možné výsledky výpočtu TS:<ul><li><b>Přijetí:</b> stav q_accept — slovo patří do jazyka.</li><li><b>Zamítnutí:</b> stav q_reject — slovo nepatří.</li><li><b>Zacyklení:</b> TS se nezastaví — výsledek nevíme.</li></ul>Zacyklení je klíčový rozdíl od KA a ZA, kde výpočet vždy skončí.",
+    ex: ""
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Rekurzivně vyčíslitelné jazyky",
+    formula: "L je rekurzivně vyčíslitelný (r.e.)\n  ⟺  ∃ TS M : M přijímá právě slova w ∈ L\n\n(M se může zacyklit na slovech w ∉ L)",
+    def: "Jazyk L je rekurzivně vyčíslitelný (r.e.), jestliže existuje Turingův stroj M, který rozpoznává L: pro každé w ∈ L se TS zastaví v q_accept; pro w ∉ L se TS buď zastaví v q_reject, nebo cyklí.",
+    exp: "Turing říkáme, že TS jazyk <b>rozpoznává</b> (ale nemusí rozhodovat). Pro slova mimo jazyk TS <b>nemusí zastavit</b> — to je přijatelné pro rozpoznávání, ale ne pro rozhodování.<br>Rekurzivní (rozhodnutelné) ⊊ rekurzivně vyčíslitelné.",
+    ex: "Jazyk kódů TS, které přijmou prázdné slovo: r.e., ale není rekurzivní."
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Rekurzivní (rozhodnutelné) jazyky",
+    formula: "L je rekurzivní\n  ⟺  ∃ TS M : M rozhoduje L\n  ⟺  M se vždy zastaví a přijme w ∈ L\n       nebo zamítne w ∉ L",
+    def: "Jazyk L je rekurzivní (algoritmicky rozhodnutelný), jestliže existuje Turingův stroj M, který se pro každý vstup w zastaví: přijme w, pokud w ∈ L, nebo zamítne w, pokud w ∉ L.",
+    exp: "Rekurzivní jazyk = <b>rozhodnutelný problém</b> — existuje algoritmus, který vždy odpoví ANO nebo NE.<br>Silnější požadavek než r.e. — TS nesmí nikdy zacyklit.<br><b>Příklady rozhodnutelných problémů:</b> prázdnost KA, ekvivalence KA, příslušnost slova k bezkontextovému jazyku.",
+    ex: "Rozhodnutelné: L(KA) = ∅?, w ∈ L(KA)?, L(G) = ∅? pro BKG G\nNerozhodnutelné: problém zastavení, ekvivalence TS"
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Varianty Turingova stroje",
+    formula: "Všechny jsou ekvivalentní (rozpoznávají stejné jazyky):\n• Standardní TS (jedná páska)\n• Vícepáskový TS (k pásek)\n• Nedeterministický TS (NDTS)\n• Lineárně omezený automat (LOA)\n• Univerzální TS",
+    def: "Varianty TS:\n• Vícepáskový TS: má k ≥ 1 pásek, každou se samostatnou hlavou — silnější zápis, ale stejná rozpoznávací síla (lze simulovat jednou páskou).\n• Nedeterministický TS (NDTS): přechodová funkce může vrátit více alternativ — přijme, pokud existuje alespoň jedna větev vedoucí do q_accept. Také ekvivalentní s DTS.\n• Lineárně omezený automat (LOA): TS s páskou omezenou délkou vstupu — rozpoznává kontextové jazyky (typ 1).\n• TS může zůstat na místě (některé formulace povolují tah Stay navíc k L, R).",
+    exp: "<b>Všechny rozumné výpočetní modely jsou ekvivalentní s TS</b> — to je základ Church-Turingovy teze.<br>Nedeterminismus u TS (na rozdíl od KA) nemění třídu rozpoznatelných jazyků, ale může dramaticky snížit čas (základ třídy NP).",
+    ex: "LOA: rozpoznává {aⁿbⁿcⁿ | n ≥ 1} (kontextový, ne bezkontextový)\nNDTS: základ třídy NP"
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Church-Turingova teze",
+    formula: "Intuitivní algoritmus = Turingův stroj",
+    def: "Church-Turingova teze: Každý algoritmus (v intuitivním smyslu) lze realizovat Turingovým strojem. Ekvivalentně: třída algoritmicky vyčíslitelných funkcí je přesně třída funkcí vyčíslitelných Turingovým strojem.",
+    exp: "Jde o <b>tezi, ne o větu</b> — nelze formálně dokázat, protože pojem \"intuitivní algoritmus\" není matematicky definován.<br>Silná podpora: všechny dosud navržené výpočetní modely (RAM stroje, lambda kalkulus, rekurzivní funkce, Python, ...) jsou ekvivalentní s TS.<br>Praktický důsledek: <b>TS je formální definicí pojmu \"algoritmus\"</b>.",
+    ex: "Python program = Turingův stroj (přes simulaci RAM nad TS). Cokoliv, co jde naprogramovat, jde realizovat TS."
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Algoritmicky rozhodnutelný problém",
+    formula: "Problém P je rozhodnutelný\n  ⟺  jazyk LP odpovídajících instancí je rekurzivní",
+    def: "Problém P je algoritmicky rozhodnutelný, jestliže existuje algoritmus (TS), který pro každou instanci problému zastaví a vrátí správnou odpověď ANO/NE.",
+    exp: "<b>Příklady rozhodnutelných problémů:</b><ul><li>Je w přijato KA M?</li><li>Je L(KA) prázdný?</li><li>Je dané číslo prvočíslo?</li><li>Jsou dvě DKA ekvivalentní?</li><li>Je dané slovo v L(G) pro BKG G?</li></ul><b>Příklady nerozhodnutelných problémů:</b><ul><li>Problém zastavení (Halting problem)</li><li>Ekvivalence TS</li><li>Prázdnost jazyka TS</li><li>Příslušnost slova do L generovaného neomezenou gramatikou</li></ul>",
+    ex: ""
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Problém zastavení (Halting problem)",
+    formula: "HALT = { ⟨M, w⟩ | TS M se zastaví na vstupu w }\n\nHALT není rozhodnutelný.",
+    def: "Problém zastavení (Halting problem): Existuje algoritmus, který pro dané kódování TS M a vstup w rozhodne, zda se M na w zastaví? Odpověď: NE — problém zastavení není algoritmicky rozhodnutelný.",
+    exp: "<b>Důkaz nerozhodnutelnosti (diagonalizací):</b><ol><li>Předpokládej, že existuje TS H, který rozhoduje HALT: H(⟨M,w⟩) = přijmout ⟺ M se zastaví na w.</li><li>Sestrojíme D(⟨M⟩): zavolá H(⟨M,⟨M⟩⟩).<br>Pokud H přijme (M zastaví na ⟨M⟩) → D cyklí.<br>Pokud H zamítne (M nezastaví na ⟨M⟩) → D přijme.</li><li>Spustíme D(⟨D⟩):<br>Pokud D zastaví na ⟨D⟩ → H přijme → D cyklí. SPOR.<br>Pokud D nezastaví na ⟨D⟩ → H zamítne → D přijme. SPOR.</li><li>V obou případech spor → H neexistuje → HALT není rozhodnutelný.</li></ol>",
+    ex: "Praktický dopad: žádný editor ani IDE nedokáže obecně říct, zda program skončí nebo ne."
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Diagonalizační metoda",
+    formula: "Seřaď všechny TS: M₁, M₂, M₃, ...\nSeřaď všechna slova: w₁, w₂, w₃, ...\n\nD(Mᵢ) = přijme, pokud Mᵢ nezamítne wᵢ\n         zamítne, pokud Mᵢ zamítne wᵢ\n→ D se liší od každého Mᵢ ve vstupu wᵢ",
+    def: "Diagonalizační metoda: uvažujeme nekonečnou matici, kde řádky jsou TS M₁, M₂, ... a sloupce jsou vstupní slova w₁, w₂, ... Vstup (i,j) říká, zda Mᵢ přijme wⱼ. Sestrojíme D \"diagonálně\": D se chová na wᵢ opačně než Mᵢ. Tedy D ≠ Mᵢ pro všechna i — D není v seznamu všech TS, což dá spor.",
+    exp: "Metoda původně od Cantora (důkaz nespočetnosti reálných čísel). Turing ji převzal k důkazu existence nerozhodnutelných problémů.<br>Ukazuje, že <b>problémů je nespočetně mnoho, ale TS je jen spočetně</b> — tedy nutně existují problémy, které žádný TS nerozhoduje.",
+    ex: ""
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Gödelovo číslo (kódování TS)",
+    formula: "⟨M⟩ = Gödelovo číslo (kódování) TS M\n     = konečný binární řetězec jednoznačně popisující M",
+    def: "Gödelovo číslo (kódování) TS M je konečná reprezentace celého TS jako binárního řetězce ⟨M⟩. Umožňuje chápat popis TS jako vstup jiného TS (TS může zpracovávat \"programy\" jako data).",
+    exp: "Klíčová myšlenka: <b>každý TS lze zakódovat jako slovo</b> — tj. jako data. To umožňuje:<ul><li>TS, který dostane jako vstup kódování jiného TS a simuluje ho (Univerzální TS).</li><li>Formulaci otázek typu \"co M dělá na vstupu w?\" jako jazykový problém.</li></ul>Analogie: zdrojový kód programu = data pro překladač.",
+    ex: "M lze zakódovat jako binární řetězec popisující Q, Σ, Γ, δ (přechodové pravidla jako čísla). Kódování není jediné — existuje mnoho platných způsobů."
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Univerzální Turingův stroj (UTS)",
+    formula: "UTS(⟨M⟩, w) simuluje výpočet M na w",
+    def: "Univerzální Turingův stroj je TS U, který dostane na vstupu kódování TS M (Gödelovo číslo ⟨M⟩) a vstup w, a simuluje výpočet M na w: přijme, pokud M přijme w; zamítne, pokud M zamítne w; cyklí, pokud M cyklí.",
+    exp: "<b>UTS = model obecného počítače.</b> Místo fixovaného \"programu\" (jako u specializovaných automatů) dostane UTS program jako data a provede ho.<br>Existence UTS je filozoficky důležitá: hardware a software jsou oddělitelné. Každý program lze zakódovat jako data a spustit na jednom hardwaru (UTS).<br>UTS je r.e. (rozpoznává jazyky rozpoznávané libovolným TS), ale HALT není rozhodnutelný.",
+    ex: ""
+  },
+  {
+    cat: "Vyčíslitelnost",
+    term: "Redukce problémů (důkaz nerozhodnutelnosti)",
+    formula: "Redukce P₁ ≤ P₂:\n   f polynomiální, w ∈ P₁ ⟺ f(w) ∈ P₂\n\nP₁ nerozhodnutelný + P₁ ≤ P₂  ⟹  P₂ nerozhodnutelný",
+    def: "Pro důkaz nerozhodnutelnosti problému P₂ metodou redukce:\n1. Zvol již známý nerozhodnutelný problém P₁ (typicky HALT).\n2. Ukáž polynomiální (nebo alespoň algoritmickou) redukci P₁ ≤ P₂: sestrojíš transformaci f takovou, že x ∈ P₁ ⟺ f(x) ∈ P₂.\n3. Závěr: pokud by P₂ byl rozhodnutelný, byl by i P₁ rozhodnutelný — spor. Tedy P₂ není rozhodnutelný.",
+    exp: "<b>Pozor na směr redukce!</b> Redukujeme KNOWN nerozhodnutelný → problém, který chceme dokázat nerozhodnutelný. Ne naopak!<br>Chyba: redukovat neznámý problém na HALT — to nic nedokazuje.",
+    ex: "Důkaz nerozhodnutelnosti prázdnosti L(TS):\n  Redukujeme HALT na prázdnost.\n  Pro vstup ⟨M, w⟩ zkonstruujeme M', který ignoruje svůj vstup a simuluje M na w.\n  L(M') = {ε} pokud M se zastaví na w, jinak L(M') = ∅.\n  Tedy M se zastaví ⟺ L(M') ≠ ∅. Tím jsme HALT zredukovali na ne-prázdnost L(TS)."
+  }
+];
+
+const CATEGORIES = [...new Set(DATA.map(d => d.cat))];
+
+const root = document.getElementById('content');
+const filtersEl = document.getElementById('filters');
+const statsEl = document.getElementById('stats');
+const searchBox = document.getElementById('searchBox');
+const clearBtn = document.getElementById('clearBtn');
+const expandAllBtn = document.getElementById('expandAll');
+const collapseAllBtn = document.getElementById('collapseAll');
+const themeBtn = document.getElementById('themeBtn');
+
+let activeFilter = 'Vše';
+let query = '';
+
+function buildFilters() {
+  filtersEl.innerHTML = '';
+  const all = ['Vše', ...CATEGORIES];
+  all.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (c === activeFilter ? ' active' : '');
+    b.textContent = c;
+    b.addEventListener('click', () => {
+      activeFilter = c;
+      buildFilters();
+      render();
+    });
+    filtersEl.appendChild(b);
+  });
+}
+
+function highlight(text, q) {
+  if (!q) return text;
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return text.replace(re, '<mark style="background:#fbbf24;color:#000;border-radius:3px;padding:0 2px;">$1</mark>');
+}
+
+function matches(item, q) {
+  if (!q) return true;
+  const s = (item.term + ' ' + item.def + ' ' + item.exp + ' ' + (item.ex||'') + ' ' + (item.formula||'')).toLowerCase();
+  return s.includes(q);
+}
+
+function render() {
+  const q = query.trim().toLowerCase();
+  const filtered = DATA.filter(d =>
+    (activeFilter === 'Vše' || d.cat === activeFilter) && matches(d, q)
+  );
+  statsEl.textContent = `${filtered.length} ${plural(filtered.length, 'pojem', 'pojmy', 'pojmů')}` +
+    (q ? ` pro „${query}"` : '') +
+    (activeFilter !== 'Vše' ? ` v kategorii „${activeFilter}"` : '');
+
+  root.innerHTML = '';
+  if (filtered.length === 0) {
+    root.innerHTML = '<div class="empty">Nic nenalezeno. Zkus jiný výraz nebo přepni kategorii.</div>';
+    return;
+  }
+
+  // Group by category
+  const byCat = {};
+  filtered.forEach(d => {
+    (byCat[d.cat] ||= []).push(d);
+  });
+  CATEGORIES.forEach(cat => {
+    if (!byCat[cat]) return;
+    const sec = document.createElement('section');
+    sec.className = 'category';
+    const h2 = document.createElement('h2');
+    h2.textContent = cat;
+    sec.appendChild(h2);
+    byCat[cat].forEach(d => sec.appendChild(buildCard(d, q)));
+    root.appendChild(sec);
+  });
+}
+
+function buildCard(d, q) {
+  const det = document.createElement('details');
+  det.className = 'card';
+  if (q) det.open = true;
+  const sum = document.createElement('summary');
+  sum.innerHTML =
+    `<span class="badge">def</span>` +
+    `<span class="title">${highlight(d.term, q)}</span>` +
+    `<span class="arrow">▶</span>`;
+  det.appendChild(sum);
+
+  const body = document.createElement('div');
+  body.className = 'body';
+
+  if (d.formula) {
+    body.innerHTML += `<h4>Formálně</h4><pre class="formula">${escapeHtml(d.formula)}</pre>`;
+  }
+  body.innerHTML += `<h4>Definice</h4><div class="definition">${highlight(d.def, q)}</div>`;
+  body.innerHTML += `<h4>Vysvětlení</h4><div class="explanation">${highlight(d.exp, q)}</div>`;
+  if (d.ex && d.ex.trim()) {
+    body.innerHTML += `<h4>Příklad</h4><div class="example">${escapeHtml(d.ex).replace(/\n/g,'<br>')}</div>`;
+  }
+  det.appendChild(body);
+  return det;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+function plural(n, a, b, c) {
+  if (n === 1) return a;
+  if (n >= 2 && n <= 4) return b;
+  return c;
+}
+
+searchBox.addEventListener('input', e => {
+  query = e.target.value;
+  render();
+});
+clearBtn.addEventListener('click', () => {
+  searchBox.value = '';
+  query = '';
+  render();
+  searchBox.focus();
+});
+expandAllBtn.addEventListener('click', () => {
+  document.querySelectorAll('details.card').forEach(d => d.open = true);
+});
+collapseAllBtn.addEventListener('click', () => {
+  document.querySelectorAll('details.card').forEach(d => d.open = false);
+});
+
+// Theme toggle (persists in localStorage)
+function setTheme(t) {
+  if (t === 'light') {
+    document.body.classList.add('light');
+    themeBtn.textContent = '☀';
+  } else {
+    document.body.classList.remove('light');
+    themeBtn.textContent = '☾';
+  }
+  try { localStorage.setItem('tinf-theme', t); } catch(e){}
+}
+themeBtn.addEventListener('click', () => {
+  setTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+});
+try {
+  const saved = localStorage.getItem('tinf-theme');
+  if (saved) setTheme(saved);
+} catch(e){}
+
+buildFilters();
+render();
+</script>
+</body>
+</html>
