@@ -284,6 +284,59 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
   }
+
+  /* ── QUIZ OVERLAY ── */
+  #quizOverlay {
+    position: fixed; inset: 0; background: var(--bg); z-index: 2000;
+    overflow-y: auto; padding: 24px 16px 60px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .qbox { max-width: 680px; width: 100%; margin: 0 auto; }
+  .qbox h2 { margin: 0 0 8px; font-size: 1.5rem; }
+  .qbox h3 { margin: 0 0 10px; font-size: 1.1rem; }
+  .q-prog { height: 5px; background: var(--border); border-radius: 3px; margin-bottom: 16px; }
+  .q-prog-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s; }
+  .q-meta { display: flex; justify-content: space-between; font-size: .82rem; color: var(--text-dim); margin-bottom: 14px; }
+  .q-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    white-space: pre-wrap; line-height: 1.65; font-size: .97rem;
+  }
+  .q-label { font-size: .75rem; font-weight: 700; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+  .q-opt {
+    display: block; width: 100%; text-align: left;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 13px 18px; margin-bottom: 10px;
+    color: var(--text); cursor: pointer; font-size: .93rem;
+    line-height: 1.45; transition: background .12s, border-color .12s;
+  }
+  .q-opt:hover:not(:disabled) { background: var(--bg-card-hover); border-color: var(--accent); }
+  .q-opt.correct { background: rgba(52,211,153,.15); border-color: var(--accent-2); color: var(--accent-2); }
+  .q-opt.wrong   { background: rgba(239,68,68,.12);  border-color: #ef4444; }
+  .q-opt.missed  { border-color: var(--accent-2); border-style: dashed; }
+  .q-fb { border-radius: 8px; padding: 10px 16px; margin-bottom: 12px; font-size: .88rem; display: none; }
+  .q-fb.show { display: block; }
+  .q-fb.ok  { background: rgba(52,211,153,.1); color: var(--accent-2); }
+  .q-fb.err { background: rgba(239,68,68,.09); color: #f87171; }
+  .qbtn {
+    padding: 11px 26px; border: none; border-radius: 8px;
+    font-size: .93rem; font-weight: 600; cursor: pointer; transition: all .15s;
+  }
+  .qbtn-primary { background: var(--accent); color: #fff; }
+  .qbtn-primary:hover { opacity: .85; transform: translateY(-1px); }
+  .qbtn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+  .qbtn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
+  .q-score-big { text-align: center; font-size: 2.8rem; font-weight: 800; margin: 12px 0 4px; }
+  .q-verdict { text-align: center; color: var(--text-dim); margin-bottom: 28px; font-size: .95rem; }
+  .q-example-box {
+    background: var(--bg-card); border: 1px solid var(--accent-3);
+    border-radius: 10px; padding: 16px 18px; margin-bottom: 14px;
+    white-space: pre-wrap; font-size: .88rem; line-height: 1.65;
+  }
+  .q-example-label { font-size: .72rem; font-weight: 700; color: var(--accent-3); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+  .q-ai-note { font-size: .8rem; color: var(--text-dim); margin-bottom: 14px; padding: 8px 14px; background: var(--bg-card); border-radius: 8px; border-left: 3px solid var(--accent-3); }
+  .qbtn-quiz { background: rgba(96,165,250,.15); border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; padding: 7px 14px; font-size: .85rem; font-weight: 600; cursor: pointer; margin-left: 6px; transition: all .15s; }
+  .qbtn-quiz:hover { background: var(--accent); color: #fff; }
 </style>
 </head>
 <body>
@@ -302,6 +355,7 @@
       <button class="icon-btn" id="expandAll" title="Rozbalit vše">⤢</button>
       <button class="icon-btn" id="collapseAll" title="Sbalit vše">⤡</button>
       <button class="icon-btn" id="themeBtn" title="Přepnout motiv">☾</button>
+      <button class="qbtn-quiz" id="quizBtn">🎯 Kvíz</button>
     </div>
   </div>
 
@@ -309,6 +363,50 @@
   <div class="stats" id="stats"></div>
 
   <main id="content"></main>
+
+  <!-- QUIZ OVERLAY -->
+  <div id="quizOverlay" style="display:none">
+    <div class="qbox">
+
+      <!-- Start screen -->
+      <div id="qStart">
+        <h2 style="text-align:center;margin-bottom:6px">🎯 TINF Kvíz</h2>
+        <p style="text-align:center;color:var(--text-dim);margin-bottom:24px">15 náhodných otázek z definic<br><small>Na konci dostaneš 2 příklady k procvičení (bez odpovědí)</small></p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="qbtn qbtn-primary" onclick="quizStart()">Spustit kvíz →</button>
+          <button class="qbtn qbtn-ghost" onclick="closeQuiz()">← Zpět na definice</button>
+        </div>
+      </div>
+
+      <!-- Question screen -->
+      <div id="qQuestion" style="display:none">
+        <div class="q-prog"><div class="q-prog-fill" id="qProgFill" style="width:0%"></div></div>
+        <div class="q-meta"><span id="qProgText"></span><span id="qScoreTrk"></span></div>
+        <div class="q-card" id="qText"></div>
+        <div id="qOpts"></div>
+        <div class="q-fb" id="qFb"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+          <button class="qbtn qbtn-ghost" onclick="closeQuiz()">Ukončit</button>
+          <button class="qbtn qbtn-primary" id="qNextBtn" onclick="quizNext()" style="display:none">Další →</button>
+        </div>
+      </div>
+
+      <!-- Results screen -->
+      <div id="qResults" style="display:none">
+        <h2 style="text-align:center;margin-bottom:4px">Výsledky</h2>
+        <div class="q-score-big" id="qScoreBig"></div>
+        <div class="q-verdict" id="qVerdict"></div>
+        <h3>📝 Příklady k procvičení</h3>
+        <div class="q-ai-note">Správné odpovědi záměrně chybí — ověř si je v AI nebo se spolužáky.</div>
+        <div id="qExamples"></div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+          <button class="qbtn qbtn-primary" onclick="quizStart()">Nový kvíz →</button>
+          <button class="qbtn qbtn-ghost" onclick="closeQuiz()">← Definice</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <footer>
     Obsahuje: proces překladu, formální jazyky, gramatiky, KA/NDKA, regulární výrazy, zásobníkové automaty,<br>
@@ -1324,6 +1422,116 @@ try {
 
 buildFilters();
 render();
+
+// ── QUIZ MODE ──
+const QUIZ_N = 15;
+let _qPool=[], _qIdx=0, _qScore=0, _qAnswered=false, _qExamples=[];
+
+function _shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b;}
+
+function _strip(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();}
+
+function _trunc(s,n){s=_strip(s);return s.length>n?s.slice(0,n).trimEnd()+'…':s;}
+
+function _genQ(item,all){
+  const defToTerm=Math.random()<0.5;
+  const pool=_shuffle(all.filter(d=>d!==item));
+  const sameCat=pool.filter(d=>d.cat===item.cat);
+  const other=pool.filter(d=>d.cat!==item.cat);
+  const distractors=[...sameCat,...other].slice(0,3);
+  if(defToTerm){
+    const opts=_shuffle([item,...distractors]);
+    return{type:'d2t',qText:'Který pojem popisuje tato definice?\n\n„'+_trunc(item.def,230)+'"',options:opts.map(d=>d.term),correctIdx:opts.indexOf(item)};
+  }else{
+    const opts=_shuffle([item,...distractors]);
+    return{type:'t2d',qText:'Co je / jak se definuje:\n\n'+item.term,options:opts.map(d=>_trunc(d.def,170)),correctIdx:opts.indexOf(item)};
+  }
+}
+
+function openQuiz(){
+  document.getElementById('quizOverlay').style.display='flex';
+  document.getElementById('qStart').style.display='block';
+  document.getElementById('qQuestion').style.display='none';
+  document.getElementById('qResults').style.display='none';
+}
+
+function closeQuiz(){document.getElementById('quizOverlay').style.display='none';}
+
+function quizStart(){
+  const items=_shuffle(DATA).slice(0,QUIZ_N);
+  _qPool=items.map(it=>_genQ(it,DATA));
+  _qIdx=0;_qScore=0;
+  const withEx=DATA.filter(d=>d.ex&&d.ex.trim());
+  _qExamples=_shuffle(withEx).slice(0,2);
+  document.getElementById('qStart').style.display='none';
+  document.getElementById('qQuestion').style.display='block';
+  document.getElementById('qResults').style.display='none';
+  _renderQ();
+}
+
+function _renderQ(){
+  const q=_qPool[_qIdx];
+  _qAnswered=false;
+  document.getElementById('qProgFill').style.width=(_qIdx/QUIZ_N*100)+'%';
+  document.getElementById('qProgText').textContent='Otázka '+(_qIdx+1)+' z '+QUIZ_N;
+  document.getElementById('qScoreTrk').textContent='✓ '+_qScore+'  ✗ '+(_qIdx-_qScore);
+  const qTextEl=document.getElementById('qText');
+  qTextEl.textContent=q.qText;
+  const wrap=document.getElementById('qOpts');
+  wrap.innerHTML='';
+  const letters='ABCD';
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='q-opt';
+    btn.textContent=letters[i]+'. '+opt;
+    btn.onclick=()=>_submitQ(i);
+    wrap.appendChild(btn);
+  });
+  const fb=document.getElementById('qFb');
+  fb.className='q-fb';fb.textContent='';
+  document.getElementById('qNextBtn').style.display='none';
+}
+
+function _submitQ(sel){
+  if(_qAnswered)return;
+  _qAnswered=true;
+  const q=_qPool[_qIdx];
+  const ok=sel===q.correctIdx;
+  if(ok)_qScore++;
+  document.querySelectorAll('.q-opt').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===q.correctIdx)btn.classList.add('correct');
+    else if(i===sel&&!ok)btn.classList.add('wrong');
+  });
+  const fb=document.getElementById('qFb');
+  fb.className='q-fb show '+(ok?'ok':'err');
+  fb.textContent=ok?'✓ Správně!':'✗ Špatně — správná odpověď: '+'ABCD'[q.correctIdx];
+  const nb=document.getElementById('qNextBtn');
+  nb.style.display='inline-block';
+  nb.textContent=_qIdx===QUIZ_N-1?'Výsledky →':'Další →';
+}
+
+function quizNext(){
+  _qIdx++;
+  if(_qIdx>=QUIZ_N)_showResults();else _renderQ();
+}
+
+function _showResults(){
+  document.getElementById('qQuestion').style.display='none';
+  document.getElementById('qResults').style.display='block';
+  const pct=Math.round(_qScore/QUIZ_N*100);
+  document.getElementById('qScoreBig').textContent=_qScore+' / '+QUIZ_N+' ('+pct+' %)';
+  const v=pct>=90?'Výborně! 🎉':pct>=70?'Dobrá práce! 👍':pct>=50?'Ujde — ještě trochu procvič.':'Projdi si definice a zkus znovu.';
+  document.getElementById('qVerdict').textContent=v;
+  const ex=document.getElementById('qExamples');
+  ex.innerHTML='';
+  _qExamples.forEach((d,i)=>{
+    ex.innerHTML+=`<div class="q-example-label">Příklad ${i+1} — ${d.term}</div><div class="q-example-box">${escapeHtml(d.ex)}</div>`;
+  });
+}
+
+document.getElementById('quizBtn').addEventListener('click',openQuiz);
+if(new URLSearchParams(location.search).get('quiz')!==null)openQuiz();
 </script>
 </body>
 </html>
